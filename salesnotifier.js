@@ -781,16 +781,17 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         var chr = result.string;
         // Check If Store is exist OR Active
         if (chr.indexOf('store_exists') != -1) {
+            setTimeout(function() {    ///code  
             fetchStorePopupWidget();
             setInterval(function(){
-               
-
+              
                 if(salespoplib_vars_obj.triggered_count<=result.max_noti){
                     fetchStorePopupWidget();
                     salespoplib_vars_obj.triggered_count++;
                 }
 
             }, parseInt(result.nextPopup*1000));
+                }, parseInt(result.first_noti_delay*1000));
             //}, parseInt(5000000));
            // fetchStorePopupWidget();
         }
