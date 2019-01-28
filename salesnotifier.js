@@ -1,4 +1,4 @@
-//CDN Version 1.0.2
+//CDN Version 1.0.4
 
 function scriptInjection(src, callback) {
     var script = document.createElement('script');
@@ -832,6 +832,9 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         //console.log(result.dataN);
         if(result.string=='no_data'){
             return false;
+        }
+        if(typeof $.notify == "undefined") {
+            notifyPopup();
         }
         var dataNotification = result.dataNotification;
         $.notify.addStyle('happyblue', {
