@@ -1,4 +1,4 @@
-//CDN Version 1.0.4
+//CDN Version 1.0.5
 
 function scriptInjection(src, callback) {
     var script = document.createElement('script');
@@ -688,7 +688,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         modal_id: "salesPopup",
         modal_response_html: "",
         is_allowed: false,
-        backend_url: "https://sales-pop.carecart.io/FrontController/",
+        backend_url: "https://tracking-sales-pop.carecart.io/FrontController/",
         do_fire: true,
         do_takeover_fire: true,
         aw_list: '',
