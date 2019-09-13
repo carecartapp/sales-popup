@@ -1,4 +1,4 @@
-//CDN Version 1.0.5
+//CDN Version 1.0.6
 
 function scriptInjection(src, callback) {
     var script = document.createElement('script');
@@ -16,7 +16,9 @@ function scriptInjection(src, callback) {
 
 scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     window.salesNotifierAdminJquery = jQuery.noConflict(true);
-
+    window.$ = jQuery.noConflict(true);
+    window.jQuery = jQuery.noConflict(true);
+    
     function notifyPopup() {
     /* Notify.js - http://notifyjs.com/ Copyright (c) 2015 MIT */
         (function (factory) {
