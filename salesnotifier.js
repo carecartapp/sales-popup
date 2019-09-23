@@ -1,4 +1,4 @@
-//CDN Version 1.0.7
+//CDN Version 1.0.8
 
 function scriptInjection(src, callback) {
     var script = document.createElement('script');
@@ -676,7 +676,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         modal_id: "salesPopup",
         modal_response_html: "",
         is_allowed: false,
-        backend_url: "https://dev-sales-pop.carecart.io/FrontController/",
+        backend_url: "https://tracking-sales-pop.carecart.io/FrontController/",
         do_fire: true,
         do_takeover_fire: true,
         aw_list: '',
@@ -704,7 +704,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         salespoplib_vars_obj.checkDevice = 'desktop';
     }
 
-    $jq321("head").append($jq321("<link/>", {rel: "stylesheet", href: "https://dev-sales-pop.carecart.io/lib/salesnotifier.css"}));
+    $jq321("head").append($jq321("<link/>", {rel: "stylesheet", href: "https://tracking-sales-pop.carecart.io/lib/salesnotifier.css"}));
 
     // @todo Totally unneccessary. Just use window.location.hostname instead.
     function extractHostname(url) {
