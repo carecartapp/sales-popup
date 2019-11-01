@@ -1,4 +1,4 @@
-//CDN Version 1.0.11
+//CDN Version 1.0.12
 
 function scriptInjection(src, callback) {
 	var script = document.createElement('script');
@@ -670,10 +670,8 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 		}
 	});
 
-	var tempAnchorTag = document.createElement('a');
-	tempAnchorTag.href = lib;
-	var backendUri = "https://" + tempAnchorTag.hostname + "/FrontController/";
-	var cssUri = "https://" + tempAnchorTag.hostname + "/public/front_assets/new-ui/css/notif-box.css";
+	var backendUri = "https://tracking-sales-pop.carecart.io/FrontController/";
+	var cssUri = "https://sales-pop.carecart.io/public/front_assets/new-ui/css/notif-box.css";
 
 	var salespoplib_vars_obj = {
 		is_again: false,
@@ -711,24 +709,6 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 		conversionformSubmitted: false
 	};
 	console.log("BACKEND-URL: ", salespoplib_vars_obj.backend_url);
-
-	/**
-	 * @todo Introduce a debugger
-	 *
-	 * Which collects the log of the library as it runs.
-	 * By turning on the debugger dynamically, it prints out the log in Console.
-	 *
-	 * For example, in a running website, you open a console and then enter something like:
-	 *
-	 * SalesPopDebugger = true;
-	 *
-	 * OR
-	 *
-	 * showSalesPopDebugLog();
-	 *
-	 * And then it prints out the already collected log
-	 * as well as it continue to print it out as long as the library is running
-	 */
 
 	function salesPopDebugger() {
 		var spDebugger = {
