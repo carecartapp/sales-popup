@@ -1,4 +1,4 @@
-//CDN Version 1.0.13
+//CDN Version 1.0.14
 
 function scriptInjection(src, callback) {
 	var script = document.createElement('script');
@@ -684,8 +684,13 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 		var tempAnchorTag = document.createElement('a');
 		tempAnchorTag.href = thisLibUrl;
 
+		var backend = "https://" + tempAnchorTag.hostname + "/FrontController/";
+		if( "sales-pop.carecart.io" === tempAnchorTag.hostname ) {
+            		backend = "https://tracking-" + tempAnchorTag.hostname + "/FrontController/";
+        	}
+
 		return {
-			"backend": "https://" + tempAnchorTag.hostname + "/FrontController/",
+			"backend": backend,
 			"css": "https://" + tempAnchorTag.hostname + "/public/front_assets/new-ui/css/notif-box.css",
 			"legacyCss": "https://" + tempAnchorTag.hostname + "/lib/salesnotifier.css"
 		};
