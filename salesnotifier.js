@@ -1,4 +1,4 @@
-//CDN Version 1.0.18
+//CDN Version 1.0.19
 
 function scriptInjection(src, callback) {
     var script = document.createElement('script');
@@ -1027,6 +1027,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                 statsHtml += "<li>" + key + ": <b>" + apiResponse[key] + "</b></li>";
             }
         });
+        statsHtml += "<li>Is Sales Pop hidden: <b>"+ isHidePopupCookieSet()? "Yes" : "No" +"</b></li>";
         statsHtml += "</ol>";
 
         var queryStringData = {
@@ -1231,7 +1232,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         if( e.target && $jq321(e.target).is("#hide-sp") ) {
             $jq321(this).fadeOut();
             setCookie("sp-hide-popup", 1, 15);
-            
+
             return false
         }
 
