@@ -1,4 +1,4 @@
-//CDN Version 1.0.16
+//CDN Version 1.0.17
 
 function scriptInjection(src, callback) {
     var script = document.createElement('script');
@@ -621,7 +621,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     })(navigator.userAgent || navigator.vendor || window.opera);
 
     var salespoplib_active_url = window.location.hostname;
-    salespoplib_active_url += (window.location.pathname.substr(-1) !== "/")? window.location.pathname : window.location.pathname.substr(0, window.location.pathname.length-1);
+    salespoplib_active_url += (window.location.pathname.substr(-1) !== "/") ? window.location.pathname : window.location.pathname.substr(0, window.location.pathname.length - 1);
 
     function getServerUrls() {
         // Finding the URL of this library among all the script tags
@@ -1016,8 +1016,39 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         return is_notification_allowed;
     };
 
+    var shouldStatsBeShown = function () {
+        return (typeof URLSearchParams === "undefined") ? false : (new URLSearchParams(window.location.search)).has('show-sp-config');
+    };
+
+    var printConfigForNerds = function () {
+        var statsHtml = "<div id='sp-stats-container'><span>::Sales Popup Configuration::</span><ol>";
+        Array.prototype.forEach.call(Object.keys(apiResponse), function (key) {
+            if ($jq321.inArray(key, ["allCollectionsWithProducts", "allNotifications", "allProductsWithCollections", "restrictionSettings"]) === -1) {
+                statsHtml += "<li>" + key + ": <b>" + apiResponse[key] + "</b></li>";
+            }
+        });
+        statsHtml += "</ol>";
+
+        var queryStringData = {
+            "webpage": encodeURIComponent(salespoplib_active_url),
+            "checkDevice": salespoplib_vars_obj.checkDevice,
+            "domain_url": encodeURIComponent(window.location.hostname),
+            "callback": "checkmodule_popup"
+        };
+
+        var api_url = salespoplib_vars_obj.backend_url + "checkStore/?" + $jq321.param( queryStringData );
+
+        statsHtml += "<a target='_blank' href='" + api_url + "'>See all generated notifications</a></div>";
+
+        $jq321("body").append(statsHtml);
+    };
+
     window.checkmodule_popup = function (response) {
         apiResponse = response;
+
+        if (shouldStatsBeShown()) {
+            printConfigForNerds();
+        }
 
         if (apiResponse.hasOwnProperty('string') &&
             (apiResponse.string === 'sales_notification_disabled' || apiResponse.string === 'no_data')
@@ -1110,6 +1141,10 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     };
 
     window.showSalesPopup = function (popUpIndexToDisplay) {
+        if( isHidePopupCookieSet() ) {
+            return false;
+        }
+
         if (typeof $jq321.notify == "undefined") {
             notifyPopup($jq321);
         }
@@ -1163,11 +1198,44 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     window.clickSaveDataResult = function (result) {
     };
 
+    function setCookie(cName, cValue, exMin) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exMin * 60 * 1000));
+        var expires = "expires="+d.toUTCString();
+        document.cookie = cName + "=" + cValue + ";" + expires + ";path=/";
+    }
+
+    function getCookie(cName) {
+        var name = cName + "=";
+        var ca = document.cookie.split(';');
+        for(var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
+    function isHidePopupCookieSet() {
+        var cookie = getCookie("sp-hide-popup");
+        return (typeof cookie == "null" || typeof cookie == "undefined" || cookie === "")? false : true;
+    }
+
     $jq321("body").on('click', '#noti-rsn-id', function (e) {
         e.preventDefault();
-        var refIDValue = $jq321(this).attr("data-dateVal");
 
+        if( e.target && $jq321(e.target).is("#hide-sp") ) {
+            $jq321(this).fadeOut();
+            setCookie("sp-hide-popup", 1, 15);
+        }
+
+        var refIDValue = $jq321(this).attr("data-dateVal");
         var hrefVal = $jq321("#sp-notification").attr("href");
+
         if (apiResponse.isLegacyStore === 1) {
             hrefVal = $jq321(this).attr("href");
         }
