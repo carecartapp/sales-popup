@@ -1,4 +1,4 @@
-//CDN Version 1.0.17
+//CDN Version 1.0.18
 
 function scriptInjection(src, callback) {
     var script = document.createElement('script');
@@ -1231,6 +1231,8 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         if( e.target && $jq321(e.target).is("#hide-sp") ) {
             $jq321(this).fadeOut();
             setCookie("sp-hide-popup", 1, 15);
+            
+            return false
         }
 
         var refIDValue = $jq321(this).attr("data-dateVal");
