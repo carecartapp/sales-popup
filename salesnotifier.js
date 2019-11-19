@@ -1,4 +1,4 @@
-//CDN Version 1.0.19
+//CDN Version 1.0.20
 
 function scriptInjection(src, callback) {
     var script = document.createElement('script');
@@ -654,7 +654,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
         return {
             "backend": backend,
-            "css": "https://" + tempAnchorTag.hostname + "/public/front_assets/new-ui/css/notif-box.css",
+            "css": "https://" + tempAnchorTag.hostname + "/public/front_assets/new-ui/css/notif-box.css?v1.1",
             "legacyCss": "https://" + tempAnchorTag.hostname + "/lib/salesnotifier.css"
         };
     }
@@ -1027,7 +1027,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                 statsHtml += "<li>" + key + ": <b>" + apiResponse[key] + "</b></li>";
             }
         });
-        statsHtml += "<li>Is Sales Pop hidden: <b>"+ isHidePopupCookieSet()? "Yes" : "No" +"</b></li>";
+        statsHtml += "<li>Hidden By Cookie: <b>"+ (isHidePopupCookieSet()? "Yes" : "No") +"</b></li>";
         statsHtml += "</ol>";
 
         var queryStringData = {
