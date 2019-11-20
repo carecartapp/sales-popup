@@ -1,4 +1,13 @@
-//CDN Version 1.0.20
+/**
+ * @package Sales Pop up ‑ Social Proof
+ * @author CareCart
+ * @link https://apps.shopify.com/partners/care-cart
+ * @link https://carecart.io/
+ * @version 1.0.21
+ *
+ * Any unauthorized use and distribution of this and related files, is strictly forbidden.
+ * In case of any inquiries, please contact here: https://carecart.io/contact-us/
+ */
 
 function scriptInjection(src, callback) {
     var script = document.createElement('script');
@@ -14,6 +23,8 @@ function scriptInjection(src, callback) {
 
 scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     window.$jq321 = jQuery.noConflict(true);
+
+    var version = "1.0.21";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -654,7 +665,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
         return {
             "backend": backend,
-            "css": "https://" + tempAnchorTag.hostname + "/public/front_assets/new-ui/css/notif-box.css?v1.1",
+            "css": "https://" + tempAnchorTag.hostname + "/public/front_assets/new-ui/css/notif-box.css?v" + version,
             "legacyCss": "https://" + tempAnchorTag.hostname + "/lib/salesnotifier.css"
         };
     }
@@ -751,8 +762,6 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     } else {
         salespoplib_vars_obj.checkDevice = 'desktop';
     }
-
-    $jq321("head").append($jq321("<link/>", {rel: "stylesheet", href: serverUrl.css}));
 
     var store_domain_grabber = window.location.hostname;
 
@@ -1058,13 +1067,15 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             return false;
         }
 
-        if (apiResponse.hasOwnProperty('isLegacyStore') &&
-            parseInt(apiResponse.isLegacyStore) === 1) {
-            $jq321("head").append($jq321("<link/>", {
-                rel: "stylesheet",
-                href: serverUrl.legacyCss + "?" + (new Date()).getTime()
-            }));
+        var cssTobeIncluded = serverUrl.css;
+        if (apiResponse.hasOwnProperty('isLegacyStore') && parseInt(apiResponse.isLegacyStore) === 1) {
+            cssTobeIncluded = serverUrl.legacyCss;
         }
+
+        $jq321("head").append($jq321("<link/>", {
+            rel: "stylesheet",
+            href: cssTobeIncluded + "?v" + version
+        }));
 
         if (parseInt(apiResponse.do_restrict) === 1) {
             var notificationsAllowed = isNotificationAllowedOnCurrentPage();
