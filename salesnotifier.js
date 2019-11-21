@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 1.0.22
+ * @version 1.1.0
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -24,7 +24,7 @@ function scriptInjection(src, callback) {
 scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     window.$jq321 = jQuery.noConflict(true);
 
-    var version = "1.0.22";
+    var version = "1.1.0";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -698,6 +698,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         spDebuger.printLog();
     };
 
+    // @todo cleanup unused extra properties
     var salespoplib_vars_obj = {
         is_again: false,
         is_takeover_again: false,
@@ -753,8 +754,6 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         allProductsWithCollections: [],
         restrictionSettings: []
     };
-
-    spDebuger.storeLog("BACKEND-URL: ", salespoplib_vars_obj.backend_url);
 
     /* Check if Mobile */
     if ($jq321.browser.mobile) {
@@ -941,6 +940,13 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     var isNotificationAllowedOnCurrentPage = function () {
         spDebuger.storeLog("isNotificationAllowedOnCurrentPage called.");
 
+        // @todo what to do in this case
+        if( apiResponse.restrictionSettings.length === 0 ) {
+            spDebuger.storeLog("No product, collection or static pag(e) selected");
+
+            return true;
+        }
+
         var currentPageHandle = window.location.pathname;
         var currentPageType = "static";
 
@@ -1054,6 +1060,8 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     };
 
     window.checkmodule_popup = function (response) {
+        spDebuger.storeLog("BACKEND-URL: ", salespoplib_vars_obj.backend_url);
+
         apiResponse = response;
 
         if (shouldStatsBeShown()) {
@@ -1067,6 +1075,26 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             return false;
         }
 
+        // check if cart page is allowed and
+        // that current page is a cart page
+        if( apiResponse.hasOwnProperty('disable_on_cart_page') && parseInt(apiResponse.disable_on_cart_page) === 1 ) {
+            if( window.location.pathname === "/cart" ) {
+                spDebuger.storeLog("Notifications are not allowed on cart page");
+                return false;
+            }
+        }
+
+        // Check whether restrict notification option is checked
+        // and that the notifications are allowed on current page
+        if (parseInt(apiResponse.do_restrict) === 1) {
+            var notificationsAllowed = isNotificationAllowedOnCurrentPage();
+            spDebuger.storeLog("Notifications allowed: " + notificationsAllowed);
+            if (!notificationsAllowed) {
+                return false;
+            }
+        }
+
+        // include the css file according to the store
         var cssTobeIncluded = serverUrl.css;
         if (apiResponse.hasOwnProperty('isLegacyStore') && parseInt(apiResponse.isLegacyStore) === 1) {
             cssTobeIncluded = serverUrl.legacyCss;
@@ -1077,16 +1105,10 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             href: cssTobeIncluded + "?v" + version
         }));
 
-        if (parseInt(apiResponse.do_restrict) === 1) {
-            var notificationsAllowed = isNotificationAllowedOnCurrentPage();
-            spDebuger.storeLog("Notifications allowed: " + notificationsAllowed);
-            if (!notificationsAllowed) {
-                return false;
-            }
-        }
-
+        // calling the notify js
         notifyPopup($jq321);
 
+        // @todo cleanup starts
         var regex = "/^([0-9a-zA-Z]([-_\\.]*[0-9a-zA-Z]+)*)@([0-9a-zA-Z]([-_\\.]*[0-9a-zA-Z]+)*)[\\.]([a-zA-Z]{2,9})$/";
         var chr = apiResponse.string;
 
@@ -1094,9 +1116,10 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         if (chr.indexOf('store_exists') === -1) {
             return false;
         }
+        // cleanup ends
 
         var relevantNotifications = apiResponse.allNotifications;
-        if (apiResponse.show_relevant == 1) {
+        if (parseInt(apiResponse.show_relevant) === 1) {
             relevantNotifications = getRelevantNotifications();
         }
 
@@ -1149,7 +1172,6 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             }, parseInt(apiResponse.nextPopup) * 1000); // set interval ends here
 
         }, parseInt(apiResponse.first_noti_delay) * 1000); // set timeout ends here
-
     };
 
     window.showSalesPopup = function (popUpIndexToDisplay) {
