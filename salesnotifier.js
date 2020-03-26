@@ -24,7 +24,7 @@ function scriptInjection(src, callback) {
 scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     window.$jq321 = jQuery.noConflict(true);
 
-    var version = "1.1.1";
+    var version = "1.1.3";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
