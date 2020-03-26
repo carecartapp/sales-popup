@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 1.1.4
+ * @version 1.1.5
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -24,7 +24,7 @@ function scriptInjection(src, callback) {
 scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     window.$jq321 = jQuery.noConflict(true);
 
-    var version = "1.1.4";
+    var version = "1.1.5";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -1186,11 +1186,6 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             }, parseInt(apiResponse.nextPopup) * 1000); // set interval ends here
 
         }, parseInt(apiResponse.first_noti_delay) * 1000); // set timeout ends here
-
-        // STOCK COUNTDOWN CALL
-        if(apiResponse && apiResponse.stock && apiResponse.stock!==null){
-            stockCountdown(apiResponse.stock);
-        }
 
     };
 
