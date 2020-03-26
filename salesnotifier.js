@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 1.1.1
+ * @version 1.1.3
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -1063,6 +1063,11 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         spDebuger.storeLog("BACKEND-URL: ", salespoplib_vars_obj.backend_url);
 
         apiResponse = response;
+	    
+	// STOCK COUNTDOWN CALL
+        if(apiResponse && apiResponse.stock && apiResponse.stock!==null){
+            stockCountdown(apiResponse.stock);
+        }
 
         if (shouldStatsBeShown()) {
             printConfigForNerds();
