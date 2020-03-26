@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 1.1.3
+ * @version 1.1.4
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -24,7 +24,7 @@ function scriptInjection(src, callback) {
 scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     window.$jq321 = jQuery.noConflict(true);
 
-    var version = "1.1.3";
+    var version = "1.1.4";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -651,6 +651,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             return {
                 "backend": "https://tracking-sales-pop.carecart.io/FrontController/",
                 "css": "https://sales-pop.carecart.io/public/front_assets/new-ui/css/notif-box.css",
+		"cssStock": "https://sales-pop.carecart.io/lib/stock-box.css",
                 "legacyCss": "https://sales-pop.carecart.io/lib/salesnotifier.css"
             };
         }
@@ -666,6 +667,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         return {
             "backend": backend,
             "css": "https://" + tempAnchorTag.hostname + "/public/front_assets/new-ui/css/notif-box.css?v" + version,
+	    "cssStock": "https://" + tempAnchorTag.hostname + "/lib/stock-box.css?v" + version,
             "legacyCss": "https://" + tempAnchorTag.hostname + "/lib/salesnotifier.css"
         };
     }
@@ -1064,9 +1066,16 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
         apiResponse = response;
 	    
-	// STOCK COUNTDOWN CALL
+	 // STOCK COUNTDOWN CALL
         if(apiResponse && apiResponse.stock && apiResponse.stock!==null){
-            stockCountdown(apiResponse.stock);
+            if (apiResponse.stock.on_off == 1)
+            {
+                $jq321("head").append($jq321("<link/>", {
+                    rel: "stylesheet",
+                    href: serverUrl.cssStock + "?v" + version
+                }));
+                stockCountdown(apiResponse.stock);
+            }
         }
 
         if (shouldStatsBeShown()) {
