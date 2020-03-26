@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 1.1.0
+ * @version 1.1.1
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -24,7 +24,7 @@ function scriptInjection(src, callback) {
 scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     window.$jq321 = jQuery.noConflict(true);
 
-    var version = "1.1.0";
+    var version = "1.1.1";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -1048,7 +1048,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         var queryStringData = {
             "webpage": encodeURIComponent(salespoplib_active_url),
             "checkDevice": salespoplib_vars_obj.checkDevice,
-            "domain_url": encodeURIComponent(window.location.hostname),
+			"domain_url": Shopify.shop,
             "callback": "checkmodule_popup"
         };
 
@@ -1172,6 +1172,12 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             }, parseInt(apiResponse.nextPopup) * 1000); // set interval ends here
 
         }, parseInt(apiResponse.first_noti_delay) * 1000); // set timeout ends here
+
+        // STOCK COUNTDOWN CALL
+        if(apiResponse && apiResponse.stock && apiResponse.stock!==null){
+            stockCountdown(apiResponse.stock);
+        }
+
     };
 
     window.showSalesPopup = function (popUpIndexToDisplay) {
@@ -1204,6 +1210,17 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         });
     };
 
+
+    var aurl = salespoplib_active_url.split('/');
+    if (aurl[1] == 'products')
+    {
+        product_id = meta.product.id;
+    }
+    else
+    {
+       product_id = null;
+    }
+
     $jq321.ajax({
         type: "GET",
         url: salespoplib_vars_obj.backend_url + 'checkStore/',
@@ -1213,7 +1230,8 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         data: {
             "webpage": encodeURIComponent(salespoplib_active_url),
             "checkDevice": salespoplib_vars_obj.checkDevice,
-            "domain_url": encodeURIComponent(store_domain_grabber),
+			"domain_url": Shopify.shop,
+            "product_id": product_id
         },
         beforeSend: function () {
         },
@@ -1276,7 +1294,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             hrefVal = $jq321(this).attr("href");
         }
 
-        var GetURL = 'https://' + encodeURIComponent(store_domain_grabber) + '/cart.json';
+		var GetURL = 'https://' + Shopify.shop + '/cart.json';
         var cartToken = '';
 
         $jq321.getJSON(GetURL, function (data) {
@@ -1293,7 +1311,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                     "noti_refID": refIDValue,
                     "cart_token": cartToken,
                     "browserInformation": navigator.sayswho,
-                    "domain_url": encodeURIComponent(store_domain_grabber),
+					"domain_url": Shopify.shop,
                 },
                 beforeSend: function () {
                 },
@@ -1318,7 +1336,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     };
 
     $jq321("body").on("click", "button[type='submit'][name='checkout']", function (e) {
-        var GetURL = 'https://' + encodeURIComponent(store_domain_grabber) + '/cart.json';
+		var GetURL = 'https://' + Shopify.shop + '/cart.json';
         var cartToken = '';
 
         $jq321.getJSON(GetURL, function (data) {
@@ -1334,7 +1352,8 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                     "webpage": encodeURIComponent(salespoplib_active_url),
                     "cart_token": cartToken,
                     "browserInformation": navigator.sayswho,
-                    "domain_url": encodeURIComponent(store_domain_grabber),
+                    //"domain_url": encodeURIComponent(store_domain_grabber),
+					"domain_url": Shopify.shop,
                 },
                 beforeSend: function () {
                 },
@@ -1350,4 +1369,21 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             });
         });
     });
-});
+
+     function stockCountdown(response) {
+
+        if (response.on_off == 1)
+        {
+            if (response.above_cart == 1)
+            {
+                $(".product-form__item--submit").prepend(response.view);
+            }
+            else
+            {
+                $(".shopify-payment-button").append(response.view);
+            }
+        }
+     }
+  
+
+
