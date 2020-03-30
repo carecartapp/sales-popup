@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 1.1.5
+ * @version 1.1.6
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -24,7 +24,7 @@ function scriptInjection(src, callback) {
 scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     window.$jq321 = jQuery.noConflict(true);
 
-    var version = "1.1.5";
+    var version = "1.1.6";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -1303,7 +1303,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             hrefVal = $jq321(this).attr("href");
         }
 
-		var GetURL = 'https://' + Shopify.shop + '/cart.json';
+		var GetURL = 'https://' + encodeURIComponent(store_domain_grabber) + '/cart.json';
         var cartToken = '';
 
         $jq321.getJSON(GetURL, function (data) {
@@ -1345,7 +1345,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     };
 
     $jq321("body").on("click", "button[type='submit'][name='checkout']", function (e) {
-		var GetURL = 'https://' + Shopify.shop + '/cart.json';
+		var GetURL = 'https://' + encodeURIComponent(store_domain_grabber) + '/cart.json';
         var cartToken = '';
 
         $jq321.getJSON(GetURL, function (data) {
