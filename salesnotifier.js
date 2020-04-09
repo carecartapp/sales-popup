@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 1.1.8
+ * @version 1.1.9
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -24,7 +24,7 @@ function scriptInjection(src, callback) {
 scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     window.$jq321 = jQuery.noConflict(true);
 
-    var version = "1.1.8";
+    var version = "1.1.9";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -1221,13 +1221,14 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
 
     var aurl = salespoplib_active_url.split('/');
+    var cc_product_id = null;	
     if (aurl[1] == 'products')
     {
-        product_id = meta.product.id;
+        cc_product_id = meta.product.id;
     }
     else
     {
-       product_id = null;
+       cc_product_id = null;
     }
 
     $jq321.ajax({
@@ -1240,7 +1241,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             "webpage": encodeURIComponent(salespoplib_active_url),
             "checkDevice": salespoplib_vars_obj.checkDevice,
 			"domain_url": Shopify.shop,
-            "product_id": product_id
+            "product_id": cc_product_id
         },
         beforeSend: function () {
         },
