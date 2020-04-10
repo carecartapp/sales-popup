@@ -1230,7 +1230,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     {
        cc_product_id = null;
     }
-
+console.log(cc_product_id);
     $jq321.ajax({
         type: "GET",
         url: salespoplib_vars_obj.backend_url + 'checkStore/',
@@ -1241,7 +1241,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             "webpage": encodeURIComponent(salespoplib_active_url),
             "checkDevice": salespoplib_vars_obj.checkDevice,
 			"domain_url": Shopify.shop,
-            "product_id": cc_product_id
+            "product_id": (meta.product && meta.product.id)?meta.product.id:''
         },
         beforeSend: function () {
         },
