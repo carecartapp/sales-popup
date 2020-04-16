@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 1.1.10
+ * @version 1.1.11
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -24,7 +24,7 @@ function scriptInjection(src, callback) {
 scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     window.$jq321 = jQuery.noConflict(true);
 
-    var version = "1.1.10";
+    var version = "1.1.11";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -1382,15 +1382,29 @@ console.log(cc_product_id);
 
      function stockCountdown(response) {
 
-        if (response.on_off == 1)
+        var selectorStock1 = $("form[action='/cart/add']").find("button[type='submit'],input[type='submit']").parent();
+        var selectorStock2 = $("form[action='/cart/add']");
+
+        if (response.above_cart == 1)
         {
-            if (response.above_cart == 1)
+            if (selectorStock1.length == 1)
             {
-                $(".product-form__item--submit").prepend(response.view);
+                $(response.view).insertBefore(selectorStock1);
             }
-            else
+            else if (selectorStock2.length == 1)
             {
-                $(".product-form__item--submit").append(response.view);
+                selectorStock2.prepend(response.view);
+            }
+        }
+        else
+        {
+            if (selectorStock1.length == 1)
+            {
+                $(response.view).insertAfter(selectorStock1);
+            }
+            else if (selectorStock2.length == 1)
+            {
+                selectorStock2.append(response.view);
             }
         }
      }
