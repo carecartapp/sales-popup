@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 1.1.12
+ * @version 1.2.0
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -24,7 +24,7 @@ function scriptInjection(src, callback) {
 scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     window.$jq321 = jQuery.noConflict(true);
 
-    var version = "1.1.12";
+    var version = "1.2.0";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -1161,31 +1161,62 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         spDebuger.storeLog("Total Notifications: ");
         spDebuger.storeLog(notificationsToShow);
 
-        var popUpHasDisplayedCounter = 0;
+        if (apiResponse.random_noti == 'yes')
+        {
+            var max = notificationCount - 1;
+            var min = 0;
+            var popUpHasDisplayedCounter = Math.floor(Math.random() * (max - min + 1)) + min;
 
-        setTimeout(function () {
-
-            showSalesPopup(popUpHasDisplayedCounter);
-            popUpHasDisplayedCounter++;
-
-            var popUpIntervalHandle = setInterval(function () {
-                if (popUpHasDisplayedCounter >= notificationCount) {
-                    popUpHasDisplayedCounter = 0;
-                }
-
-                if (salespoplib_vars_obj.triggered_count >= apiResponse.max_noti - 1) {
-                    clearInterval(popUpIntervalHandle);
-                    return false;
-                }
+            setTimeout(function () {
 
                 showSalesPopup(popUpHasDisplayedCounter);
+                
+                var popUpIntervalHandle = setInterval(function () {
+                    
+                    if (salespoplib_vars_obj.triggered_count >= apiResponse.max_noti - 1) {
+                        clearInterval(popUpIntervalHandle);
+                        return false;
+                    }
 
-                salespoplib_vars_obj.triggered_count++;
+                    popUpHasDisplayedCounter = Math.floor(Math.random() * (max - min + 1)) + min;
+
+                    showSalesPopup(popUpHasDisplayedCounter);
+
+                    salespoplib_vars_obj.triggered_count++;
+
+                }, parseInt(apiResponse.nextPopup) * 1000); // set interval ends here
+
+            }, parseInt(apiResponse.first_noti_delay) * 1000); // set timeout ends here
+        }
+        else
+        {
+           var popUpHasDisplayedCounter = 0; 
+
+           setTimeout(function () {
+
+                showSalesPopup(popUpHasDisplayedCounter);
                 popUpHasDisplayedCounter++;
+                
+                var popUpIntervalHandle = setInterval(function () {
+                    if (popUpHasDisplayedCounter >= notificationCount) {
+                        popUpHasDisplayedCounter = 0;
+                    }
 
-            }, parseInt(apiResponse.nextPopup) * 1000); // set interval ends here
+                    if (salespoplib_vars_obj.triggered_count >= apiResponse.max_noti - 1) {
+                        clearInterval(popUpIntervalHandle);
+                        return false;
+                    }
 
-        }, parseInt(apiResponse.first_noti_delay) * 1000); // set timeout ends here
+                    showSalesPopup(popUpHasDisplayedCounter);
+
+                    salespoplib_vars_obj.triggered_count++;
+                    popUpHasDisplayedCounter++;
+                    
+
+                }, parseInt(apiResponse.nextPopup) * 1000); // set interval ends here
+
+            }, parseInt(apiResponse.first_noti_delay) * 1000); // set timeout ends here
+        }
 
     };
 
