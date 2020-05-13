@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 1.2.1
+ * @version 1.2.2
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -24,7 +24,7 @@ function scriptInjection(src, callback) {
 scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     window.$jq321 = jQuery.noConflict(true);
 
-    var version = "1.2.1";
+    var version = "1.2.2";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -652,6 +652,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                 "backend": "https://tracking-sales-pop.carecart.io/FrontController/",
                 "css": "https://sales-pop.carecart.io/public/front_assets/new-ui/css/notif-box.css",
 		"cssStock": "https://sales-pop.carecart.io/lib/stock-box.css",
+		"cssTimer": "https://sales-pop.carecart.io/lib/timer-box.css",
                 "legacyCss": "https://sales-pop.carecart.io/lib/salesnotifier.css"
             };
         }
@@ -668,6 +669,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             "backend": backend,
             "css": "https://" + tempAnchorTag.hostname + "/public/front_assets/new-ui/css/notif-box.css?v" + version,
 	    "cssStock": "https://" + tempAnchorTag.hostname + "/lib/stock-box.css?v" + version,
+	    "cssTimer": "https://" + tempAnchorTag.hostname + "/lib/timer-box.css?v" + version,
             "legacyCss": "https://" + tempAnchorTag.hostname + "/lib/salesnotifier.css"
         };
     }
@@ -1077,7 +1079,23 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                 stockCountdown(apiResponse.stock);
             }
         }
+	
+	     // Time COUNTDOWN CALL
+        if(apiResponse && apiResponse.timer && apiResponse.timer!==null)
+        {
+            /*$jq321("head").append($jq321("<link/>", {
+                    rel: "stylesheet",
+                    href: serverUrl.cssTimer + "?v" + version
+                }));*/
+            //timeCountdown(apiResponse.timer);
 
+            setTimeout(function(){ $jq321("head").append($jq321("<link/>", {
+                    rel: "stylesheet",
+                    href: serverUrl.cssTimer + "?v" + version
+                })); }, 1000);
+            setTimeout(function(){ timeCountdown(apiResponse.timer); }, 2000);
+        }
+	    
         if (shouldStatsBeShown()) {
             printConfigForNerds();
         }
@@ -1439,6 +1457,85 @@ console.log(cc_product_id);
             }
         }
      }
+
+	  // ---------------------------------- <TIME MODULE> -----------------------------------------
+
+    // timer function
+    function getTimeRemaining(endtime) {
+        var t = Date.parse(endtime) - Date.parse(new Date());
+        var seconds = Math.floor((t / 1000) % 60);
+        var minutes = Math.floor((t / 1000 / 60) % 60);
+        var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+        var days = Math.floor(t / (1000 * 60 * 60 * 24));
+        return {
+            'total': t,
+            'days': days,
+            'hours': hours,
+            'minutes': minutes,
+            'seconds': seconds
+        };
+    }
+
+    function initializeClock(id, endtime) {
+        var clock = document.getElementById(id);
+        var daysSpan = clock.querySelector('.days');
+        var hoursSpan = clock.querySelector('.hours');
+        var minutesSpan = clock.querySelector('.minutes');
+        var secondsSpan = clock.querySelector('.seconds');
+
+        function updateClock() {
+            var t = getTimeRemaining(endtime);
+
+            daysSpan.innerHTML = t.days;
+            hoursSpan.innerHTML = ('0' + t.hours).slice(-2);
+            minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
+            secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
+
+            if (t.total <= 0) {
+                clearInterval(timeinterval);
+            }
+        }
+
+        updateClock();
+        var timeinterval = setInterval(updateClock, 1000);
+    }
+
+    // CREATE LIVE TIME COUNTDOWN
+    function timeCountdown(response) {
+
+        var selectorStock1 = $jq321("form[action='/cart/add']").find("button[type='submit'],input[type='submit']").parent();
+        var selectorStock2 = $jq321("form[action='/cart/add']");
+
+        if (response.above_cart == 1)
+        {
+            if (selectorStock1.length == 1)
+            {
+                $jq321(response.view).insertBefore(selectorStock1);
+            }
+            else if (selectorStock2.length == 1)
+            {
+                selectorStock2.prepend(response.view);
+            }
+        }
+        else
+        {
+            if (selectorStock1.length == 1)
+            {
+                $jq321(response.view).insertAfter(selectorStock1);
+            }
+            else if (selectorStock2.length == 1)
+            {
+                selectorStock2.append(response.view);
+            }
+        }
+
+        var deadline = response.time;
+        initializeClock('clockdivpreview', deadline); 
+    }
+
+    // ---------------------------------- </TIME MODULE> -----------------------------------------
+	
+	
   });
 
 
