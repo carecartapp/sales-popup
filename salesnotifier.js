@@ -1462,7 +1462,11 @@ console.log(cc_product_id);
 
     // timer function
     function getTimeRemaining(endtime) {
-        var t = Date.parse(endtime) - Date.parse(new Date());
+          var now = new Date;
+          var utc_timestamp = new Date(now.getUTCFullYear(),now.getUTCMonth(), now.getUTCDate() , 
+      now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds());
+        
+        var t = Date.parse(endtime) - utc_timestamp;
         var seconds = Math.floor((t / 1000) % 60);
         var minutes = Math.floor((t / 1000 / 60) % 60);
         var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
