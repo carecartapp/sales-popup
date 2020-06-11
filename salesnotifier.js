@@ -1466,7 +1466,15 @@ console.log(cc_product_id);
           var utc_timestamp = new Date(now.getUTCFullYear(),now.getUTCMonth(), now.getUTCDate() , 
       now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds());
         
-        var t = Date.parse(endtime) - utc_timestamp;
+        //var t = Date.parse(endtime) - utc_timestamp;
+	/* New Hack for Safari */
+        var s = endtime;
+        var a = s.split(/[^0-9]/);
+        var endtime =new Date (a[0],a[1]-1,a[2],a[3],a[4],a[5] );
+        
+        var t = endtime - utc_timestamp;
+        /* END  New Hack for Safari */  
+	    
         var seconds = Math.floor((t / 1000) % 60);
         var minutes = Math.floor((t / 1000 / 60) % 60);
         var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
