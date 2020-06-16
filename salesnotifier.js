@@ -1429,10 +1429,14 @@ console.log(cc_product_id);
         });
     });
 
-     function stockCountdown(response) {
-
+   function stockCountdown(response) {
+         
         var selectorStock1 = $jq321("form[action='/cart/add']").find("button[type='submit'],input[type='submit']").parent();
-        var selectorStock2 = $jq321("form[action='/cart/add']");
+        var selectorStock2 = $jq321("form[action='/cart/add']"); 
+        var selectorStock3 = $jq321("form[action='/cart/add']:first").find("button[type='submit'],input[type='submit']").parent();
+        var selectorStock4 = $jq321("form[action='/cart/add']:first");
+        var selectorStock5 = $jq321("#shopify-section-product-template").find("form[action='/cart/add']").find("button[type='submit'],input[type='submit']").parent();
+        var selectorStock6 = $jq321("#shopify-section-product-template").find("form[action='/cart/add']");
 
         if (response.above_cart == 1)
         {
@@ -1443,6 +1447,22 @@ console.log(cc_product_id);
             else if (selectorStock2.length == 1)
             {
                 selectorStock2.prepend(response.view);
+            }
+            else if (selectorStock3.length == 1)
+            {
+                $jq321(response.view).insertBefore(selectorStock3);
+            }
+            else if (selectorStock4.length == 1)
+            {
+                selectorStock4.prepend(response.view);
+            }
+            else if (selectorStock5.length == 1)
+            {
+                $jq321(response.view).insertBefore(selectorStock5);
+            }
+            else if (selectorStock6.length == 1)
+            {
+                selectorStock6.prepend(response.view);
             }
         }
         else
@@ -1455,7 +1475,23 @@ console.log(cc_product_id);
             {
                 selectorStock2.append(response.view);
             }
-        }
+            else if (selectorStock3.length == 1)
+            {
+                $jq321(response.view).insertAfter(selectorStock3);
+            }
+            else if (selectorStock4.length == 1)
+            {
+                selectorStock4.append(response.view);
+            }
+            else if (selectorStock5.length == 1)
+            {
+                $jq321(response.view).insertAfter(selectorStock5);
+            }
+            else if (selectorStock6.length == 1)
+            {
+                selectorStock6.append(response.view);
+            }
+        } 
      }
 
 	  // ---------------------------------- <TIME MODULE> -----------------------------------------
@@ -1515,8 +1551,12 @@ console.log(cc_product_id);
     // CREATE LIVE TIME COUNTDOWN
     function timeCountdown(response) {
 
-        var selectorStock1 = $jq321("form[action='/cart/add']").find("button[type='submit'],input[type='submit']").parent();
+         var selectorStock1 = $jq321("form[action='/cart/add']").find("button[type='submit'],input[type='submit']").parent();
         var selectorStock2 = $jq321("form[action='/cart/add']");
+        var selectorStock3 = $jq321("form[action='/cart/add']:first").find("button[type='submit'],input[type='submit']").parent();
+        var selectorStock4 = $jq321("form[action='/cart/add']:first");
+        var selectorStock5 = $jq321("#shopify-section-product-template").find("form[action='/cart/add']").find("button[type='submit'],input[type='submit']").parent();
+        var selectorStock6 = $jq321("#shopify-section-product-template").find("form[action='/cart/add']");
 
         if (response.above_cart == 1)
         {
@@ -1528,6 +1568,22 @@ console.log(cc_product_id);
             {
                 selectorStock2.prepend(response.view);
             }
+            else if (selectorStock3.length == 1)
+            {
+                $jq321(response.view).insertBefore(selectorStock3);
+            }
+            else if (selectorStock4.length == 1)
+            {
+                selectorStock4.prepend(response.view);
+            }
+            else if (selectorStock5.length == 1)
+            {
+                $jq321(response.view).insertBefore(selectorStock5);
+            }
+            else if (selectorStock6.length == 1)
+            {
+                selectorStock6.prepend(response.view);
+            }
         }
         else
         {
@@ -1538,6 +1594,22 @@ console.log(cc_product_id);
             else if (selectorStock2.length == 1)
             {
                 selectorStock2.append(response.view);
+            }
+            else if (selectorStock3.length == 1)
+            {
+                $jq321(response.view).insertAfter(selectorStock3);
+            }
+            else if (selectorStock4.length == 1)
+            {
+                selectorStock4.append(response.view);
+            }
+            else if (selectorStock5.length == 1)
+            {
+                $jq321(response.view).insertAfter(selectorStock5);
+            }
+            else if (selectorStock6.length == 1)
+            {
+                selectorStock6.append(response.view);
             }
         }
 
