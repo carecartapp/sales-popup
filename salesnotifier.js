@@ -1539,7 +1539,7 @@ console.log(cc_product_id);
             minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
             secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
 
-            if (t.total <= 0) {
+            if (t.days == 0 && t.hours == 0 && t.minutes == 0 && t.seconds == 0) {
                 clearInterval(timeinterval);
             }
         }
