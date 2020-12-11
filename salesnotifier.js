@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 1.2.3
+ * @version 1.2.8
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -24,7 +24,7 @@ function scriptInjection(src, callback) {
 scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     window.$jq321 = jQuery.noConflict(true);
 
-    var version = "1.2.3";
+    var version = "1.2.8";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -1257,7 +1257,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             html: dataNotification
         });
 
-        $jq321.notify("hello world", {
+        /*$jq321.notify("hello world", {
             globalPosition: apiResponse.desktop_position,
             style: 'salesPopStyle',
             autoHideDelay: parseInt(apiResponse.display_time) * 1000,
@@ -1265,7 +1265,47 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             hideAnimation: 'slideUp',
             hideDuration: 600,
             clickToHide: false
-        });
+        });*/
+
+        if (salespoplib_vars_obj.checkDevice == 'mobile')
+        {
+            if (apiResponse.mobile_display_option == 'undefined')
+            {
+                $jq321.notify("hello world", {
+                    globalPosition: apiResponse.desktop_position,
+                    style: 'salesPopStyle',
+                    autoHideDelay: parseInt(apiResponse.display_time) * 1000,
+                    showDuration: 600,
+                    hideAnimation: 'slideUp',
+                    hideDuration: 600,
+                    clickToHide: false
+                });
+            }
+            else
+            {
+               $jq321.notify("hello world", {
+                    globalPosition: apiResponse.mobile_display_option,
+                    style: 'salesPopStyle',
+                    autoHideDelay: parseInt(apiResponse.display_time) * 1000,
+                    showDuration: 600,
+                    hideAnimation: 'slideUp',
+                    hideDuration: 600,
+                    clickToHide: false
+                }); 
+            }
+        }
+        else
+        {
+              $jq321.notify("hello world", {
+                globalPosition: apiResponse.desktop_position,
+                style: 'salesPopStyle',
+                autoHideDelay: parseInt(apiResponse.display_time) * 1000,
+                showDuration: 600,
+                hideAnimation: 'slideUp',
+                hideDuration: 600,
+                clickToHide: false
+            });  
+        }
     };
 
 
