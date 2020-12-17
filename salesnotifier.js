@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 1.2.9
+ * @version 1.2.8
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -1240,33 +1240,29 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
     window.showSalesPopup = function (popUpIndexToDisplay) {
 
-        // ZERO MINUTER ISSUE
-        var notificationTime = apiResponse.allNotifications[popUpIndexToDisplay].order_generated_time;
-        var notificationGenerationTime = Date.parse(notificationTime)/1000;
-        notificationGenerationTime = parseInt(notificationGenerationTime);
         var now = new Date;
-        var currentTimestamp = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds());
-        currentTimestamp = Date.parse(currentTimestamp)/1000;
-        var timeDifference = Math.floor((currentTimestamp - notificationGenerationTime) / 60) ; 
+        var utc_timestamp = new Date(now.getUTCFullYear(),now.getUTCMonth(), now.getUTCDate() , 
+          now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds());
+    var s = apiResponse.allNotifications[popUpIndexToDisplay].order_generated_time;
+        var a = s.split(/[^0-9]/);
+        var endtime =new Date (a[0],a[1]-1,a[2],a[3],a[4],a[5] );
         
-        //console.log(currentTimestamp);
-        if(timeDifference >= 60)
+        var timeDifference = utc_timestamp - endtime;
+    timeDifference = Math.floor((timeDifference / 1000) / 60);
+            
+    if(timeDifference >= 60)
+    {
+        timeDifference = Math.floor(timeDifference / 60);
+        if(timeDifference >= 24)
         {
-            timeDifference = Math.floor(timeDifference / 60);
-            if(timeDifference >= 24)
-            {
-                timeDifference = Math.floor(timeDifference / 24);
-                timeDifference = Math.abs(timeDifference) + " day(s) ago";
-            }
-            else 
-            {
-                timeDifference = Math.abs(timeDifference) + " hour(s) ago";
-            }   
+            timeDifference = Math.floor(timeDifference / 24);
+            timeDifference = Math.abs(timeDifference) + " day(s) ago";
         }
-        else
+        else 
         {
-            timeDifference = Math.abs(timeDifference) + " minute(s) ago";
-        }
+            timeDifference = Math.abs(timeDifference) + " hour(s) ago";
+        }   
+    }else{timeDifference = Math.abs(timeDifference) + " minute(s) ago"}
 
         if( isHidePopupCookieSet() ) {
             return false;
@@ -1336,11 +1332,11 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             });  
         }
 
-        // ZERO MINUTER ISSUE
         if(apiResponse.timeText == "{{time_ago}}")
         {
             $jq321(".pur-time").html(timeDifference);
         }
+    
     };
 
 
