@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 1.2.8
+ * @version 1.2.11
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -24,7 +24,7 @@ function scriptInjection(src, callback) {
 scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     window.$jq321 = jQuery.noConflict(true);
 
-    var version = "1.2.8";
+    var version = "1.2.11";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -1500,70 +1500,46 @@ console.log(cc_product_id);
         });
     });
 
-   function stockCountdown(response) {
-         
-        var selectorStock1 = $jq321("form[action='/cart/add']").find("button[type='submit'],input[type='submit']").parent();
-        var selectorStock2 = $jq321("form[action='/cart/add']"); 
-        var selectorStock3 = $jq321("form[action='/cart/add']:first").find("button[type='submit'],input[type='submit']").parent();
-        var selectorStock4 = $jq321("form[action='/cart/add']:first");
-        var selectorStock5 = $jq321("#shopify-section-product-template").find("form[action='/cart/add']").find("button[type='submit'],input[type='submit']").parent();
-        var selectorStock6 = $jq321("#shopify-section-product-template").find("form[action='/cart/add']");
+   
+     function stockCountdown(responseStock) {
 
-        if (response.above_cart == 1)
-        {
-            if (selectorStock1.length == 1)
-            {
-                $jq321(response.view).insertBefore(selectorStock1);
-            }
-            else if (selectorStock2.length == 1)
-            {
-                selectorStock2.prepend(response.view);
-            }
-            else if (selectorStock3.length == 1)
-            {
-                $jq321(response.view).insertBefore(selectorStock3);
-            }
-            else if (selectorStock4.length == 1)
-            {
-                selectorStock4.prepend(response.view);
-            }
-            else if (selectorStock5.length == 1)
-            {
-                $jq321(response.view).insertBefore(selectorStock5);
-            }
-            else if (selectorStock6.length == 1)
-            {
-                selectorStock6.prepend(response.view);
-            }
-        }
-        else
-        {
-            if (selectorStock1.length == 1)
-            {
-                $jq321(response.view).insertAfter(selectorStock1);
-            }
-            else if (selectorStock2.length == 1)
-            {
-                selectorStock2.append(response.view);
-            }
-            else if (selectorStock3.length == 1)
-            {
-                $jq321(response.view).insertAfter(selectorStock3);
-            }
-            else if (selectorStock4.length == 1)
-            {
-                selectorStock4.append(response.view);
-            }
-            else if (selectorStock5.length == 1)
-            {
-                $jq321(response.view).insertAfter(selectorStock5);
-            }
-            else if (selectorStock6.length == 1)
-            {
-                selectorStock6.append(response.view);
-            }
-        } 
-     }
+		var selectorStock1 = $jq321("form[action='/cart/add']").find("button[type='submit'],input[type='submit']").parent();
+		var selectorStock2 = $jq321("form[action='/cart/add']");
+		var selectorStock3 = $jq321("form[action='/cart/add']:first").find("button[type='submit'],input[type='submit']").parent();
+		var selectorStock4 = $jq321("form[action='/cart/add']:first");
+		var selectorStock5 = $jq321("#shopify-section-product-template").find("form[action='/cart/add']").find("button[type='submit'],input[type='submit']").parent();
+		var selectorStock6 = $jq321("#shopify-section-product-template").find("form[action='/cart/add']");
+
+		if (responseStock.above_cart == 1) {
+			if (selectorStock1.length == 1) {
+				selectorStock1.prepend(responseStock.view);
+			} else if (selectorStock2.length == 1) {
+				selectorStock2.prepend(responseStock.view);
+			} else if (selectorStock3.length == 1) {
+				$jq321(responseStock.view).insertBefore(selectorStock3);
+			} else if (selectorStock4.length == 1) {
+				selectorStock4.prepend(responseStock.view);
+			} else if (selectorStock5.length == 1) {
+				$jq321(responseStock.view).insertBefore(selectorStock5);
+			} else if (selectorStock6.length == 1) {
+				selectorStock6.prepend(responseStock.view);
+			}
+		} else {
+			if (selectorStock1.length == 1) {
+				selectorStock1.append(responseStock.view);
+			} else if (selectorStock2.length == 1) {
+				selectorStock2.append(responseStock.view);
+			} else if (selectorStock3.length == 1) {
+				$jq321(responseStock.view).insertAfter(selectorStock3);
+			} else if (selectorStock4.length == 1) {
+				selectorStock4.append(responseStock.view);
+			} else if (selectorStock5.length == 1) {
+				$jq321(responseStock.view).insertAfter(selectorStock5);
+			} else if (selectorStock6.length == 1) {
+				selectorStock6.append(responseStock.view);
+			}
+		}
+	}
 
 	  // ---------------------------------- <TIME MODULE> -----------------------------------------
 
@@ -1620,77 +1596,49 @@ console.log(cc_product_id);
     }
 
     // CREATE LIVE TIME COUNTDOWN
-    function timeCountdown(response) {
+    function timeCountdown(responseTimer) {
+		var selectorTimer1 = $jq321("form[action='/cart/add']").find("button[type='submit'],input[type='submit']").parent();
+		var selectorTimer2 = $jq321("form[action='/cart/add']");
+		var selectorTimer3 = $jq321("form[action='/cart/add']:first").find("button[type='submit'],input[type='submit']").parent();
+		var selectorTimer4 = $jq321("form[action='/cart/add']:first");
+		var selectorTimer5 = $jq321("#shopify-section-product-template").find("form[action='/cart/add']").find("button[type='submit'],input[type='submit']").parent();
+		var selectorTimer6 = $jq321("#shopify-section-product-template").find("form[action='/cart/add']");
 
-         var selectorStock1 = $jq321("form[action='/cart/add']").find("button[type='submit'],input[type='submit']").parent();
-        var selectorStock2 = $jq321("form[action='/cart/add']");
-        var selectorStock3 = $jq321("form[action='/cart/add']:first").find("button[type='submit'],input[type='submit']").parent();
-        var selectorStock4 = $jq321("form[action='/cart/add']:first");
-        var selectorStock5 = $jq321("#shopify-section-product-template").find("form[action='/cart/add']").find("button[type='submit'],input[type='submit']").parent();
-        var selectorStock6 = $jq321("#shopify-section-product-template").find("form[action='/cart/add']");
+		if (responseTimer.above_cart == 1) {
+			if (selectorTimer1.length == 1) {
+				selectorTimer1.prepend(responseTimer.view);
+			} else if (selectorTimer2.length == 1) {
+				selectorTimer2.prepend(responseTimer.view);
+			} else if (selectorTimer3.length == 1) {
+				$jq321(responseTimer.view).insertBefore(selectorTimer3);
+			} else if (selectorTimer4.length == 1) {
+				selectorTimer4.prepend(responseTimer.view);
+			} else if (selectorTimer5.length == 1) {
+				$jq321(responseTimer.view).insertBefore(selectorTimer5);
+			} else if (selectorTimer6.length == 1) {
+				selectorTimer6.prepend(responseTimer.view);
+			}
+		} else {
+			if (selectorTimer1.length == 1) {
+				selectorTimer1.append(responseTimer.view);
+			} else if (selectorTimer2.length == 1) {
+				selectorTimer2.append(responseTimer.view);
+			} else if (selectorTimer3.length == 1) {
+				$jq321(responseTimer.view).insertAfter(selectorTimer3);
+			} else if (selectorTimer4.length == 1) {
+				selectorTimer4.append(responseTimer.view);
+			} else if (selectorTimer5.length == 1) {
+				$jq321(responseTimer.view).insertAfter(selectorTimer5);
+			} else if (selectorTimer6.length == 1) {
+				selectorTimer6.append(responseTimer.view);
+			}
+		}
 
-        if (response.above_cart == 1)
-        {
-            if (selectorStock1.length == 1)
-            {
-                $jq321(response.view).insertBefore(selectorStock1);
-            }
-            else if (selectorStock2.length == 1)
-            {
-                selectorStock2.prepend(response.view);
-            }
-            else if (selectorStock3.length == 1)
-            {
-                $jq321(response.view).insertBefore(selectorStock3);
-            }
-            else if (selectorStock4.length == 1)
-            {
-                selectorStock4.prepend(response.view);
-            }
-            else if (selectorStock5.length == 1)
-            {
-                $jq321(response.view).insertBefore(selectorStock5);
-            }
-            else if (selectorStock6.length == 1)
-            {
-                selectorStock6.prepend(response.view);
-            }
-        }
-        else
-        {
-            if (selectorStock1.length == 1)
-            {
-                $jq321(response.view).insertAfter(selectorStock1);
-            }
-            else if (selectorStock2.length == 1)
-            {
-                selectorStock2.append(response.view);
-            }
-            else if (selectorStock3.length == 1)
-            {
-                $jq321(response.view).insertAfter(selectorStock3);
-            }
-            else if (selectorStock4.length == 1)
-            {
-                selectorStock4.append(response.view);
-            }
-            else if (selectorStock5.length == 1)
-            {
-                $jq321(response.view).insertAfter(selectorStock5);
-            }
-            else if (selectorStock6.length == 1)
-            {
-                selectorStock6.append(response.view);
-            }
-        }
-
-        var deadline = response.time;
-        initializeClock('clockdivpreview', deadline); 
-    }
+		var deadline = responseTimer.time;
+		initializeClock('clockdivpreview', deadline);
+	}
 
     // ---------------------------------- </TIME MODULE> -----------------------------------------
 	
 	
   });
-
-
