@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 1.2.11
+ * @version 1.2.12
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -24,7 +24,7 @@ function scriptInjection(src, callback) {
 scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     window.$jq321 = jQuery.noConflict(true);
 
-    var version = "1.2.11";
+    var version = "1.2.12";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -942,98 +942,157 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
      * @returns {boolean}
      */
     var isNotificationAllowedOnCurrentPage = function () {
-        spDebuger.storeLog("isNotificationAllowedOnCurrentPage called.");
 
-        // @todo what to do in this case
-        if( apiResponse.restrictionSettings.length === 0 ) {
-            spDebuger.storeLog("No product, collection or static pag(e) selected");
+		spDebuger.storeLog("isNotificationAllowedOnCurrentPage called.");
 
-            return true;
-        }
+		// @todo what to do in this case
+		if (apiResponse.restrictionSettings.length === 0)
+		{
+			spDebuger.storeLog("No product, collection or static pag(e) selected");
+			return true;
+		}
+		var currentPageUrl = window.location.href;
+		var currentPageHandle = window.location.pathname;
+		var is_notification_allowed = false;
+		var entryFound = false;
+		var currentPageType = "";
 
-        var currentPageHandle = window.location.pathname;
-        var currentPageType = "static";
+// If not then do further processing to get the current page handle
+		currentPageHandle = window.location.pathname.split("/");
 
-        // Check if its a homepage.
-        if (currentPageHandle === "/") {
-            return true;
-        }
+		if (($jq321.inArray("products", currentPageHandle) != -1) && ($jq321.inArray("collections", currentPageHandle) != -1))
+		{
+			var currentPageTypec = currentPageHandle[1];
+			var currentPageTypep = currentPageHandle[3];
+			var currentPageHandlec = currentPageHandle[2];
+			var currentPageHandlep = currentPageHandle[4];
+		}
+		else if ($jq321.inArray("products", currentPageHandle) != -1)
+		{
+			currentPageType = "products";
+			currentPageHandle = currentPageHandle.pop();
+		}
+		else if ($jq321.inArray("all", currentPageHandle) != -1)
+		{
+			console.log("collections all in array");
+		}
+		else if ($jq321.inArray("collections", currentPageHandle) != -1)
+		{
+			currentPageType = "collections";
+			currentPageHandle = currentPageHandle.pop();
+		}
+		else
+		{
+			console.log("products and collections NOT in array");
+		}
 
-        // If not then do further processing to get the current page handle
-        currentPageHandle = window.location.pathname.split("/");
+		if ("products" === currentPageTypep && "collections" === currentPageTypec)
+		{
+// Two things can happen here:
+// a. Check by product
+// b. Check by collection
 
-        if (currentPageHandle.length > 2) {
-            currentPageType = currentPageHandle[1];
-            currentPageHandle = currentPageHandle[2];
-        }
+// a. Checking by Product
+			Array.prototype.forEach.call(apiResponse.restrictionSettings, function (page)
+			{
+				if ((page.product_id == null && page.collection_id != null) && !entryFound)
+				{
+					if (page.handle === currentPageHandlec)
+					{
+						is_notification_allowed = entryFound = true;
+					}
+				}
+				else if (page.product_id == null && page.collection_id == null && page.handle == currentPageUrl)
+				{
+					is_notification_allowed = entryFound = true;
+				}
+			});
 
-        spDebuger.storeLog("CurrentPageType: " + currentPageType);
-        spDebuger.storeLog("currentPageHandle: " + currentPageHandle);
+			if (entryFound === true) {
+				return true;
+			}
 
-        var is_notification_allowed = false;
-        var entryFound = false;
+// b. Check by Collection
+			Array.prototype.forEach.call(apiResponse.restrictionSettings, function (page)
+			{
+				if ((page.product_id != null && page.collection_id == null) && !entryFound)
+				{
+					if (page.handle === currentPageHandlep)
+					{
+						is_notification_allowed = entryFound = true;
+					}
+				}
+			});
+		}
+		else if ("products" === currentPageType)
+		{
+// Two things can happen here:
+// a. Check by product
+// b. Check by collection
 
-        if ("static" === currentPageType) {
-            Array.prototype.forEach.call(apiResponse.restrictionSettings, function (page) {
-                if ((page.product_id == null && page.collection_id == null) && !entryFound) {
-                    if (page.handle === window.location.origin + window.location.pathname) {
-                        is_notification_allowed = entryFound = true;
-                    }
-                }
-            });
-        } else if ("products" === currentPageType) {
-            // Two things can happen here:
-            // a. Check by product
-            // b. Check by collection
+// a. Checking by Product
+			Array.prototype.forEach.call(apiResponse.restrictionSettings, function (page)
+			{
+				if ((page.product_id != null && page.collection_id == null) && !entryFound)
+				{
+					if (page.handle === currentPageHandle)
+					{
+						is_notification_allowed = entryFound = true;
+					}
+				}
+				else if (page.product_id == null && page.collection_id == null && page.handle == currentPageUrl)
+				{
+					is_notification_allowed = entryFound = true;
+				}
+			});
 
-            // a. Checking by Product
-            Array.prototype.forEach.call(apiResponse.restrictionSettings, function (page) {
-                if ((page.product_id != null && page.collection_id == null) && !entryFound) {
-                    if (page.handle === currentPageHandle) {
-                        is_notification_allowed = entryFound = true;
-                    }
-                }
-            });
+			if (entryFound === true) {
+				return true;
+			}
 
-            if (entryFound === true) {
-                return true;
-            }
+// b. Check by Collection
+			Array.prototype.forEach.call(apiResponse.restrictionProducts, function (obj)
+			{
+				if (obj.handle === currentPageHandle)
+				{
+					is_notification_allowed = entryFound = true;
+				}
+			});
+		}
+		else if ("collections" === currentPageType)
+		{
+			Array.prototype.forEach.call(apiResponse.restrictionSettings, function (page)
+			{
+				if ((page.product_id == null && page.collection_id != null) && !entryFound)
+				{
+					if (page.handle === currentPageHandle)
+					{
+						is_notification_allowed = entryFound = true;
+					}
+				}
+				else if (page.product_id == null && page.collection_id == null && page.handle == currentPageUrl)
+				{
+					is_notification_allowed = entryFound = true;
+				}
+			});
+		}
+		else
+		{
+			Array.prototype.forEach.call(apiResponse.restrictionSettings, function (page)
+			{
+				if (page.handle == currentPageUrl)
+				{
+					is_notification_allowed = entryFound = true;
+				}
+				else if(page.handle+'/' == currentPageUrl)
+				{
+					is_notification_allowed = entryFound = true;
+				}
+			});
+		}
 
-            // b. Check by Collection
-
-            // 1. Get collections of this product
-            var collectionsByProductHandle = getCollectionHandlesByProductHandle(currentPageHandle);
-            spDebuger.storeLog("CollectionsByProductHandle:");
-            spDebuger.storeLog(collectionsByProductHandle);
-
-            collectionsByProductHandle = collectionsByProductHandle.split(",");
-
-            if (collectionsByProductHandle.length === 0) {
-                return is_notification_allowed;
-            }
-
-            // 2. Check if the handle(s) of the current product exists in restriction settings
-            Array.prototype.forEach.call(apiResponse.restrictionSettings, function (page) {
-                Array.prototype.forEach.call(collectionsByProductHandle, function (collectionHandle) {
-                    if ((page.product_id == null && page.collection_id != null) && !entryFound) {
-                        if (page.handle === collectionHandle) {
-                            is_notification_allowed = entryFound = true;
-                        }
-                    }
-                });
-            });
-        } else if ("collections" === currentPageType) {
-            Array.prototype.forEach.call(apiResponse.restrictionSettings, function (page) {
-                if ((page.product_id == null && page.collection_id != null) && !entryFound) {
-                    if (page.handle === currentPageHandle) {
-                        is_notification_allowed = entryFound = true;
-                    }
-                }
-            });
-        }
-
-        return is_notification_allowed;
-    };
+		return is_notification_allowed;
+	};
 
     var shouldStatsBeShown = function () {
         return (typeof URLSearchParams === "undefined") ? false : (new URLSearchParams(window.location.search)).has('show-sp-config');
