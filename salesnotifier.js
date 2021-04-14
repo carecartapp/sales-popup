@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 1.2.13
+ * @version 1.2.14
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -24,7 +24,7 @@ function scriptInjection(src, callback) {
 scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     window.$jq321 = jQuery.noConflict(true);
 
-    var version = "1.2.13";
+    var version = "1.2.14";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -654,6 +654,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 		"cssStock": "https://sales-pop.carecart.io/lib/stock-box.css",
 		"cssTimer": "https://sales-pop.carecart.io/lib/timer-box.css",
 		"cssVisitor": "https://sales-pop.carecart.io/lib/visitor-box.css",
+		"cssSold": "https://sales-pop.carecart.io/lib/sold-box.css",
                 "legacyCss": "https://sales-pop.carecart.io/lib/salesnotifier.css"
             };
         }
@@ -672,6 +673,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 	    "cssStock": "https://" + tempAnchorTag.hostname + "/lib/stock-box.css?v" + version,
 	    "cssTimer": "https://" + tempAnchorTag.hostname + "/lib/timer-box.css?v" + version,
 	    "cssVisitor": "https://" + tempAnchorTag.hostname + "/lib/visitor-box.css?v" + version,
+	    "cssSold": "https://" + tempAnchorTag.hostname + "/lib/sold-box.css?v" + version,
             "legacyCss": "https://" + tempAnchorTag.hostname + "/lib/salesnotifier.css"
         };
     }
@@ -1166,6 +1168,17 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 			}));
 
 			visitorCounter(apiResponse.visitor);
+		}
+
+		// SOLD COUNTER CALL
+		if(apiResponse && apiResponse.sold && apiResponse.sold !== null)
+		{
+			$jq321("head").append($jq321("<link/>", {
+				rel: "stylesheet",
+				href: serverUrl.cssSold + "?v" + version
+			}));
+
+			soldCounter(apiResponse.sold);
 		}
 	    
         if (shouldStatsBeShown()) {
@@ -1738,6 +1751,41 @@ console.log(cc_product_id);
 		});
 	}
 // ---------------------------------- <VISITOR COUNTER MODULE> --------------------------------
+
+// ---------------------------------- <SOLD COUNTER MODULE> --------------------------------
+	function soldCounter(response) {
+
+		var selectorSold1 = $jq321("form[action='/cart/add']:first").find("button[type='submit'],input[type='submit']").parent();
+		var selectorSold2 = $jq321("form[action='/cart/add']:first");
+
+		if (response.above_cart == 1)
+		{
+			if (selectorSold1.length == 1)
+			{
+				selectorSold1.prepend(response.view);
+			}
+			else if (selectorSold2.length == 1)
+			{
+				selectorSold2.prepend(response.view);
+			}
+		}
+		else
+		{
+			if (selectorSold1.length == 1)
+			{
+				selectorSold1.append(response.view);
+			}
+			else if (selectorSold2.length == 1)
+			{
+				selectorSold2.append(response.view);
+			}
+		}
+
+		$jq321('ms').html(function(i, v){
+			return v.replace(/(\d)/g, '<span '+response.count+'>$1</span>');
+		});
+	}
+// ---------------------------------- </SOLD COUNTER MODULE> --------------------------------
 	
 	
   });
