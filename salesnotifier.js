@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 1.2.15
+ * @version 1.2.16
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -24,7 +24,7 @@ function scriptInjection(src, callback) {
 scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     window.$jq321 = jQuery.noConflict(true);
 
-    var version = "1.2.15";
+    var version = "1.2.16";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -649,7 +649,8 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         // return with production URLs
         if (thisLibUrl === "") {
             return {
-                "backend": "https://tracking-sales-pop.carecart.io/index.php/FrontController/",
+                //"backend": "https://tracking-sales-pop.carecart.io/index.php/FrontController/",
+                "backend": "https://tracking-sales-pop2.carecart.io/index.php/FrontController/",
                 "css": "https://sales-pop.carecart.io/public/front_assets/new-ui/css/notif-box.css",
 		"cssStock": "https://sales-pop.carecart.io/lib/stock-box.css",
 		"cssTimer": "https://sales-pop.carecart.io/lib/timer-box.css",
@@ -662,9 +663,11 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         var tempAnchorTag = document.createElement('a');
         tempAnchorTag.href = thisLibUrl;
 
-        var backend = "https://" + tempAnchorTag.hostname + "/index.php/FrontController/";
+        //var backend = "https://" + tempAnchorTag.hostname + "/index.php/FrontController/";
+        var backend = "https://tracking-sales-pop2.carecart.io/index.php/FrontController/";
         if ("sales-pop.carecart.io" === tempAnchorTag.hostname) {
-            backend = "https://tracking-" + tempAnchorTag.hostname + "/index.php/FrontController/";
+            //backend = "https://tracking-" + tempAnchorTag.hostname + "/index.php/FrontController/";
+            backend = "https://tracking-sales-pop2.carecart.io/index.php/FrontController/";
         }
 
         return {
