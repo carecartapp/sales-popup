@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 1.2.16
+ * @version 1.2.17
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -24,7 +24,7 @@ function scriptInjection(src, callback) {
 scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     window.$jq321 = jQuery.noConflict(true);
 
-    var version = "1.2.16";
+    var version = "1.2.17";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -649,8 +649,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         // return with production URLs
         if (thisLibUrl === "") {
             return {
-                //"backend": "https://tracking-sales-pop.carecart.io/index.php/FrontController/",
-                "backend": "https://tracking-sales-pop2.carecart.io/index.php/FrontController/",
+                "backend": "https://tracking-sales-pop.carecart.io/index.php/FrontController/",
                 "css": "https://sales-pop.carecart.io/public/front_assets/new-ui/css/notif-box.css",
 		"cssStock": "https://sales-pop.carecart.io/lib/stock-box.css",
 		"cssTimer": "https://sales-pop.carecart.io/lib/timer-box.css",
@@ -663,11 +662,9 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         var tempAnchorTag = document.createElement('a');
         tempAnchorTag.href = thisLibUrl;
 
-        //var backend = "https://" + tempAnchorTag.hostname + "/index.php/FrontController/";
-        var backend = "https://tracking-sales-pop2.carecart.io/index.php/FrontController/";
+        var backend = "https://" + tempAnchorTag.hostname + "/index.php/FrontController/";
         if ("sales-pop.carecart.io" === tempAnchorTag.hostname) {
-            //backend = "https://tracking-" + tempAnchorTag.hostname + "/index.php/FrontController/";
-            backend = "https://tracking-sales-pop2.carecart.io/index.php/FrontController/";
+            backend = "https://tracking-" + tempAnchorTag.hostname + "/index.php/FrontController/";
         }
 
         return {
@@ -1732,62 +1729,89 @@ console.log(cc_product_id);
 // ---------------------------------- <VISITOR COUNTER MODULE> ------------------------------
 // ******************************************************************************************
 	function visitorCounter(response) {
-		var selectorVisitor1 = $jq321("form[action='/cart/add']:first").find("button[type='submit'],input[type='submit']").parent();
-		var selectorVisitor2 = $jq321("form[action='/cart/add']:first");
+        var selectorVisitor1 = $jq321("form[action='/cart/add']").find("button[type='submit'],input[type='submit']").parent();
+        var selectorVisitor2 = $jq321("form[action='/cart/add']");
+        var selectorVisitor3 = $jq321("form[action='/cart/add']:first").find("button[type='submit'],input[type='submit']").parent();
+        var selectorVisitor4 = $jq321("form[action='/cart/add']:first");
 
-		if (response.above_cart == 1) {
-			if (selectorVisitor1.length == 1) {
-				$jq321(response.view).insertBefore(selectorVisitor1);
-			} else if (selectorVisitor2.length == 1) {
-				selectorVisitor2.prepend(response.view);
-			}
-		} else {
-			if (selectorVisitor1.length == 1) {
-				$jq321(response.view).insertAfter(selectorVisitor1);
-			} else if (selectorVisitor2.length == 1) {
-				selectorVisitor2.append(response.view);
-			}
-		}
+        if (response.above_cart == 1) {
+            if (selectorVisitor1.length == 1) {
+                selectorVisitor1.prepend(response.view);
+            } else if (selectorVisitor2.length == 1) {
+                selectorVisitor2.prepend(response.view);
+            } else if (selectorVisitor3.length == 1) {
+                $jq321(response.view).insertBefore(selectorVisitor3);
+            } else if (selectorVisitor4.length == 1) {
+                selectorVisitor4.prepend(response.view);
+            }
+        } else {
+            if (selectorVisitor1.length == 1) {
+                selectorVisitor1.append(response.view);
+            } else if (selectorVisitor2.length == 1) {
+                selectorVisitor2.append(response.view);
+            } else if (selectorVisitor3.length == 1) {
+                $jq321(response.view).insertAfter(selectorVisitor3);
+            } else if (selectorVisitor4.length == 1) {
+                selectorVisitor4.append(response.view);
+            }
+        }
 
-		$jq321('m').html(function (i, v) {
-			return v.replace(/(\d)/g, '<span ' + response.count + '>$1</span>');
-		});
-	}
+        $jq321('m').html(function (i, v) {
+            return v.replace(/(\d)/g, '<span ' + response.count + '>$1</span>');
+        });
+    }
 // ---------------------------------- <VISITOR COUNTER MODULE> --------------------------------
 
 // ---------------------------------- <SOLD COUNTER MODULE> --------------------------------
 	function soldCounter(response) {
+        var selectorSold1 = $jq321("form[action='/cart/add']").find("button[type='submit'],input[type='submit']").parent();
+        var selectorSold2 = $jq321("form[action='/cart/add']");
+        var selectorSold3 = $jq321("form[action='/cart/add']:first").find("button[type='submit'],input[type='submit']").parent();
+        var selectorSold4 = $jq321("form[action='/cart/add']:first");
 
-		var selectorSold1 = $jq321("form[action='/cart/add']:first").find("button[type='submit'],input[type='submit']").parent();
-		var selectorSold2 = $jq321("form[action='/cart/add']:first");
+        if (response.above_cart == 1)
+        {
+            if (selectorSold1.length == 1)
+            {
+                selectorSold1.prepend(response.view);
+            }
+            else if (selectorSold2.length == 1)
+            {
+                selectorSold2.prepend(response.view);
+            }
+            else if (selectorSold3.length == 1)
+            {
+                selectorSold3.prepend(response.view);
+            }
+            else if (selectorSold2.length == 1)
+            {
+                selectorSold4.prepend(response.view);
+            }
+        }
+        else
+        {
+            if (selectorSold1.length == 1)
+            {
+                selectorSold1.append(response.view);
+            }
+            else if (selectorSold2.length == 1)
+            {
+                selectorSold2.append(response.view);
+            }
+            else if (selectorSold3.length == 1)
+            {
+                selectorSold3.append(response.view);
+            }
+            else if (selectorSold4.length == 1)
+            {
+                selectorSold4.append(response.view);
+            }
+        }
 
-		if (response.above_cart == 1)
-		{
-			if (selectorSold1.length == 1)
-			{
-				selectorSold1.prepend(response.view);
-			}
-			else if (selectorSold2.length == 1)
-			{
-				selectorSold2.prepend(response.view);
-			}
-		}
-		else
-		{
-			if (selectorSold1.length == 1)
-			{
-				selectorSold1.append(response.view);
-			}
-			else if (selectorSold2.length == 1)
-			{
-				selectorSold2.append(response.view);
-			}
-		}
-
-		$jq321('ms').html(function(i, v){
-			return v.replace(/(\d)/g, '<span '+response.count+'>$1</span>');
-		});
-	}
+        $jq321('ms').html(function(i, v){
+            return v.replace(/(\d)/g, '<span '+response.count+'>$1</span>');
+        });
+    }
 // ---------------------------------- </SOLD COUNTER MODULE> --------------------------------
 	
 	
