@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 1.2.19
+ * @version 1.2.20
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -24,7 +24,7 @@ function scriptInjection(src, callback) {
 scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     window.$jq321 = jQuery.noConflict(true);
 
-    var version = "1.2.19";
+    var version = "1.2.20";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -649,32 +649,32 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         // return with production URLs
         if (thisLibUrl === "") {
             return {
-                "backend": "https://tracking-sales-pop.carecart.io/index.php/FrontController/",
+                /*"backend": "https://tracking-sales-pop.carecart.io/index.php/FrontController/",
                 "css": "https://sales-pop.carecart.io/public/front_assets/new-ui/css/notif-box.css",
 		"cssStock": "https://sales-pop.carecart.io/lib/stock-box.css",
 		"cssTimer": "https://sales-pop.carecart.io/lib/timer-box.css",
 		"cssVisitor": "https://sales-pop.carecart.io/lib/visitor-box.css",
 		"cssSold": "https://sales-pop.carecart.io/lib/sold-box.css",
-                "legacyCss": "https://sales-pop.carecart.io/lib/salesnotifier.css"
+                "legacyCss": "https://sales-pop.carecart.io/lib/salesnotifier.css"*/
 
-                /*"backend": "https://uat-tracking-sales-pop.carecart.io/index.php/FrontController/",
+                "backend": "https://uat-tracking-sales-pop.carecart.io/index.php/FrontController/",
                 "css": "https://dev3.carecart.io/public/front_assets/new-ui/css/notif-box.css",
         "cssStock": "https://dev3.carecart.io/lib/stock-box.css",
         "cssTimer": "https://dev3.carecart.io/lib/timer-box.css",
         "cssVisitor": "https://dev3.carecart.io/lib/visitor-box.css",
         "cssSold": "https://dev3.carecart.io/lib/sold-box.css",
-                "legacyCss": "https://dev3.carecart.io/lib/salesnotifier.css"*/
+                "legacyCss": "https://dev3.carecart.io/lib/salesnotifier.css"
             };
         }
 
         var tempAnchorTag = document.createElement('a');
         tempAnchorTag.href = thisLibUrl;
 
-        //var backend = "https://uat-tracking-sales-pop.carecart.io/index.php/FrontController/";
-        var backend = "https://" + tempAnchorTag.hostname + "/index.php/FrontController/";
+        var backend = "https://uat-tracking-sales-pop.carecart.io/index.php/FrontController/";
+        /*var backend = "https://" + tempAnchorTag.hostname + "/index.php/FrontController/";
         if ("sales-pop.carecart.io" === tempAnchorTag.hostname) {
             backend = "https://tracking-" + tempAnchorTag.hostname + "/index.php/FrontController/";
-        }
+        }*/
 
         return {
             "backend": backend,
@@ -1145,12 +1145,25 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             if (typeof (Storage) !== "undefined") {
                 var dataReceived = false;
                 if (typeof apiResponse.allCollectionsWithProducts !== 'undefined' && typeof apiResponse.allNotifications !== 'undefined' && typeof apiResponse.allProductsWithCollections !== 'undefined') {
-                    if(apiResponse.allCollectionsWithProducts.length > 0 || apiResponse.allNotifications.length > 1 || apiResponse.allProductsWithCollections.length > 0){
+                    //if(apiResponse.allCollectionsWithProducts.length > 0 || apiResponse.allNotifications.length > 1 || apiResponse.allProductsWithCollections.length > 0){
+					var notificationsExistingData = window.localStorage.getItem('NotificationsData');
+					var updateStorage = false;
+					if(notificationsExistingData === null){
+						updateStorage = true;
+					}else {
+						notificationsExistingData = JSON.parse(notificationsExistingData);
+						var tStamp = notificationsExistingData.timeStamp;
+						if ((Math.round(new Date().getTime() / 1000) - tStamp) > 300) {
+							updateStorage = true;
+						}
+					}
+
+					if(updateStorage === true){
                         var notificationsDataObj = {
-                        timeStamp: Math.round(new Date().getTime() / 1000),
-                        allCollectionsWithProducts: apiResponse.allCollectionsWithProducts,
-                        allNotifications: apiResponse.allNotifications,
-                        allProductsWithCollections: apiResponse.allProductsWithCollections
+							timeStamp: Math.round(new Date().getTime() / 1000),
+							allCollectionsWithProducts: apiResponse.allCollectionsWithProducts,
+							allNotifications: apiResponse.allNotifications,
+							allProductsWithCollections: apiResponse.allProductsWithCollections
                         };
                         notificationsDataObjJson = JSON.stringify(notificationsDataObj);
                         window.localStorage.setItem('NotificationsData', notificationsDataObjJson);
