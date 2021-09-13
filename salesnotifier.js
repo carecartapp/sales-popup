@@ -3,11 +3,28 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 1.2.23
+ * @version 1.2.24
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
  */
+ 
+ //Create the element using the createElement method.
+var myDiv = document.createElement("ji");
+
+//Set its class.
+myDiv.className = 'doubleCheck';
+
+//Finally, append the element to the HTML body
+document.body.appendChild(myDiv);
+
+var doubleCheck = document.getElementsByClassName("doubleCheck");
+var ndoubleCheck = doubleCheck.length;
+if(ndoubleCheck == 2)
+{
+	//window.stop();
+	throw new Error("DOUBLE APP JS");
+}
 
 function scriptInjection(src, callback) {
     var script = document.createElement('script');
@@ -24,7 +41,7 @@ function scriptInjection(src, callback) {
 scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     window.$jq321 = jQuery.noConflict(true);
 
-    var version = "1.2.23";
+    var version = "1.2.24";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -1516,7 +1533,6 @@ console.log(cc_product_id);
         dataType: "jsonp",
         jsonpCallback: "checkmodule_popup",
         crossDomain: true,
-        cache : true,
         data: {
             "webpage": encodeURIComponent(salespoplib_active_url),
             "checkDevice": salespoplib_vars_obj.checkDevice,
@@ -1796,7 +1812,8 @@ console.log(cc_product_id);
 		}
 
 		var deadline = responseTimer.time;
-		initializeClock('clockdivpreview', deadline);
+		//initializeClock('clockdivpreview', deadline);
+		initializeClock('clockdivpreviewSales', deadline);
 	}
 
     // ---------------------------------- </TIME MODULE> -----------------------------------------
