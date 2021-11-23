@@ -1,0 +1,1072 @@
+/**
+ * @package Sales Pop up ‑ Social Proof
+ * @author CareCart
+ * @link https://apps.shopify.com/partners/care-cart
+ * @link https://carecart.io/
+ * @version 1.1.0
+ *
+ * Any unauthorized use and distribution of this and related files, is strictly forbidden.
+ * In case of any inquiries, please contact here: https://carecart.io/contact-us/
+ */
+
+@import url('https://fonts.googleapis.com/css?family=Poppins:300i,400,600&display=swap');
+
+.notificationPreview-box *,
+.notificationPreview-box ::after,
+.notificationPreview-box ::before {
+    box-sizing: border-box;
+}
+
+.notifyjs-corner {
+    margin-left: 0 !important;
+    background: none !important;
+    box-shadow: none;
+}
+
+.notificationPreview-box {
+    width: 100%;
+    font-family: 'Poppins', sans-serif;
+    position: relative;
+}
+
+.notificationPreview-box *, ::after, ::before {
+    box-sizing: border-box;
+}
+
+.notificationPreview-box {
+    clear: both;
+    display: block;
+    content: "";
+    margin: auto;
+    width: 360px;
+    height: 100px;
+}
+
+.notificationPreview-box img {
+    max-width: 100%;
+    height: auto;
+}
+
+.notificationPreview-box-inner {
+    position: relative;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, .125);
+    border-radius: .25rem;
+    margin-top: 18px;
+    width: 360px;
+    height: 100px;
+    cursor: pointer;
+}
+
+.notificationPreview-box .np-inside {
+    padding: 10px;
+    height: 100px;
+}
+
+.notificationPreview-box .np-col-img {
+    width: 75px;
+    line-height: 75px;
+    height: 75px;
+    float: left;
+    overflow: hidden;
+    /*background-size: contain;*/
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-color: white;
+    display: block;
+}
+
+.notificationPreview-box .np-col-right {
+    width: 255px; /*263px;*/
+    float: right;
+    padding-left: 10px;
+    align-self: center;
+    height: 75px;
+}
+
+.notificationPreview-box .side-pannel-top-card {
+    width: 100%;
+}
+
+.notificationPreview-box .aside-top-card {
+    line-height: 1
+}
+
+.notificationPreview-box .card-inside {
+    padding-top: 9px;
+    padding-bottom: 17px;
+}
+
+.notificationPreview-box .card-body .pur-time {
+    color: #6666ff;
+    font-size: 11px;
+    font-family: 'Poppins', sans-serif;
+    display: inline-block;
+    margin: 5px 0;
+}
+
+.notificationPreview-box .card-footer-text {
+    text-align: right;
+    margin: 0 0;
+}
+
+.notificationPreview-box .post-card-footer-text {
+    text-align: left;
+    margin: 0 0;
+}
+
+.notificationPreview-box .card-body {
+    display: block;
+    padding: 0;
+}
+
+.notificationPreview-box .ribbon-txt {
+    position: absolute;
+    right: 5px;
+    top: 8px;
+    font-size: 11px;
+    font-weight: bold;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+}
+
+.notificationPreview-box .card-ribbon {
+    position: absolute;
+    right: -2px;
+    bottom: 12px;
+    width: 58px;
+}
+
+.notificationPreview-box.capsule-shape .card-ribbon {
+    background-color: #ff6666;
+    height: 23px;
+    border-radius: 10px;
+    right: 5px;
+    bottom: 20px;
+}
+
+.notificationPreview-box.capsule-shape .card-ribbon .sample-ribbon {
+    display: none
+}
+
+.notificationPreview-box.capsule-shape .card-ribbon .ribbon-txt {
+    top: 3px;
+}
+
+.notificationPreview-box .card-body h5.card-title {
+    font-size: 15px;
+    margin: 5px 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    height: 18px;
+    line-height: 18px;
+    overflow: hidden;
+}
+
+.notificationPreview-box .card-body p.card-text {
+    font-size: 12px;
+    line-height: 12px;
+    color: #000;
+    padding: 0;
+    margin: 5px 0;
+    font-family: 'Poppins', sans-serif;
+    width: 97%;
+}
+
+.notificationPreview-box p.card-footer-text {
+    position: absolute;
+    bottom: -20px;
+    right: 5px;
+}
+
+.notificationPreview-box p.card-footer-text small {
+    font-size: 10px;
+    line-height: normal;
+    color: rgba(0, 0, 0, 0.5);
+    font-style: italic;
+    font-family: 'Poppins', sans-serif;
+}
+
+.notificationPreview-box.capsule-shape .notificationPreview-box-inner {
+    -webkit-border-radius: 55px;
+    -moz-border-radius: 55px;
+    border-radius: 55px;
+}
+
+.notificationPreview-box.capsule-shape .notificationPreview-box-inner .np-col-img {
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.notificationPreview-box .card-body h5.card-title a {
+    color: #000;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+}
+
+/************* Dark Theme **********************/
+.notificationPreview-box.dark-theme .notificationPreview-box-inner{
+    background-color: #000;
+}
+
+.notificationPreview-box.dark-theme .card-body p.card-text {
+    color: #fff!important;
+}
+
+.notificationPreview-box.dark-theme p.card-footer-text small {
+    color: rgba(0, 0, 0, 1);
+}
+
+.notificationPreview-box.dark-theme .card-body h5.card-title a {
+    color: #fff;
+}
+
+.notificationPreview-box.dark-theme .card-body .pur-time {
+    color: #fff;
+}
+
+/************* NEW YEAR BG **********************/
+.notificationPreview-box.new-yearBg .notificationPreview-box-inner {
+    border: none;
+    background-image: url(../assets/img/new_year-bg.png);
+    background-size: 100% 100%;
+    background-color: transparent;
+}
+
+.notificationPreview-box.new-yearBg .notificationPreview-box-inner:before {
+    content: '';
+    position: absolute;
+    top: -30px;
+    z-index: 1;
+    right: 17px;
+    background: url(../assets/img/newyeartop.png) 0 0 no-repeat;
+    background-size: 100%;
+    width: 80px;
+    height: 55%;
+}
+
+.notificationPreview-box.new-yearBg.capsule-shape .np-col-img {
+    border-radius: 50%;
+}
+
+.notificationPreview-box.new-yearBg .card-body p.card-text {
+    color: #fff !important;
+}
+
+.notificationPreview-box.new-yearBg .card-body h5.card-title a{
+    color: #fff;
+}
+.notificationPreview-box.christmas-bg .card-body h5.card-title a{
+    color: #fff;
+}
+.notificationPreview-box.halloween-bg .card-body h5.card-title a{
+    color: #fff;
+}
+.notificationPreview-box.cyber-monday-bg .card-body h5.card-title a{
+    color: #fff;
+}
+
+.notificationPreview-box.valentine-bg .card-body h5.card-title a{
+    color: #EB1F23 !important;
+}
+
+.notificationPreview-box.thanks-giving-bg .card-body h5.card-title a{
+    color: #ffc721 !important;
+}
+.notificationPreview-box.black-friday-bg .card-body h5.card-title a{
+    color: #fff;
+}
+.notificationPreview-box.valentine-bg .card-body .pur-time{
+    color: #fff;
+}
+
+/************* christmas BG **********************/
+.notificationPreview-box.christmas-bg .notificationPreview-box-inner {
+    border: none;
+    background-image: url(../assets/img/xmas-bg.png);
+    background-size: 100% 100%;
+    background-color: transparent;
+}
+
+.notificationPreview-box.christmas-bg .notificationPreview-box-inner:before {
+    content: '';
+    position: absolute;
+    top: -38px;
+    z-index: 1;
+    right: 20px;
+    background: url(../assets/img/xmas-icon_top.png) 0 0 no-repeat;
+    background-size: 100%;
+    width: 70px;
+    height: 55%;
+}
+
+.notificationPreview-box.christmas-bg.capsule-shape .np-col-img {
+    border-radius: 50%;
+}
+
+.notificationPreview-box.christmas-bg .card-body p.card-text {
+    color: #fff !important;
+}
+
+/************* valentine BG **********************/
+.notificationPreview-box.valentine-bg .notificationPreview-box-inner {
+    border: none;
+    background-image: url(../assets/img/valentine-bg.png);
+    background-size: 100% 100%;
+    background-color: transparent;
+}
+
+.notificationPreview-box.valentine-bg .notificationPreview-box-inner:before {
+    content: '';
+    position: absolute;
+    top: -38px;
+    z-index: 1;
+    right: 20px;
+    background: url(../assets/img/valenlove.png) 0 0 no-repeat;
+    background-size: 100%;
+    width: 70px;
+    height: 55%;
+}
+
+.notificationPreview-box.valentine-bg.capsule-shape .np-col-img {
+    border-radius: 50%;
+}
+
+.notificationPreview-box.valentine-bg .card-body p.card-text {
+    color: #EB1F23 !important;
+}
+
+.notificationPreview-box.valentine-bg .card-body h5.card-title {
+    color: #EB1F23 !important;
+}
+
+/************* halloween-bg BG **********************/
+.notificationPreview-box.halloween-bg .notificationPreview-box-inner {
+    border: none;
+    background-image: url(../assets/img/halloween-bg.png);
+    background-size: 100% 100%;
+    background-color: transparent;
+}
+
+.notificationPreview-box.halloween-bg .notificationPreview-box-inner:before {
+    content: '';
+    position: absolute;
+    top: -38px;
+    z-index: 1;
+    right: 20px;
+    background: url(../assets/img/hallpump.png) 0 0 no-repeat;
+    background-size: 100%;
+    width: 70px;
+    height: 55%;
+}
+
+.notificationPreview-box.halloween-bg.capsule-shape .np-col-img {
+    border-radius: 50%;
+}
+
+.notificationPreview-box.halloween-bg .card-body p.card-text {
+    color: #fff !important;
+}
+
+.notificationPreview-box.halloween-bg .card-body h5.card-title {
+    color: #fff !important;
+}
+
+/************* thanks-giving BG **********************/
+.notificationPreview-box.thanks-giving-bg .notificationPreview-box-inner {
+    border: none;
+    background-image: url(../assets/img/thanks_giving-bg.png);
+    background-size: 100% 100%;
+    background-color: transparent;
+}
+
+.notificationPreview-box.thanks-giving-bg .notificationPreview-box-inner:before {
+    content: '';
+    position: absolute;
+    top: -40px;
+    z-index: 1;
+    right: 0;
+    background: url(../assets/img/thankstop.png) 0 0 no-repeat;
+    background-size: 100%;
+    width: 200px;
+    height: 50px;
+}
+
+.notificationPreview-box.thanks-giving-bg.capsule-shape .np-col-img {
+    border-radius: 50%;
+}
+
+.notificationPreview-box.thanks-giving-bg .card-body p.card-text {
+    color: #EB1F23 !important;
+}
+
+.notificationPreview-box.thanks-giving-bg .card-body h5.card-title {
+    color: #EB1F23 !important;
+}
+
+.notificationPreview-box.thanks-giving-bg .card-body .pur-time {
+    color: #ffc721 !important;
+}
+.notificationPreview-box.christmas-bg .card-body .pur-time {
+    color: #fff !important;
+}
+.notificationPreview-box.new-yearBg .card-body .pur-time{
+    color: #fff !important;
+}
+.notificationPreview-box.halloween-bg .card-body .pur-time{
+    color: #fff !important;
+}
+.notificationPreview-box.valentine-bg .card-body .pur-time{
+    color: #EB1F23 !important;
+}
+.notificationPreview-box.black-friday-bg  .card-body .pur-time{
+    color: #fff !important;
+}
+/************* black-friday-bg BG **********************/
+.notificationPreview-box.black-friday-bg .notificationPreview-box-inner {
+    border: none;
+    background-image: url(../assets/img/black_friday-bg.png);
+    background-size: 100% 100%;
+    background-color: transparent;
+}
+
+.notificationPreview-box.black-friday-bg .notificationPreview-box-inner:before {
+    content: '';
+    position: absolute;
+    top: -32px;
+    z-index: 1;
+    right: 9px;
+    background: url(../assets/img/black-fr.png) 0 0 no-repeat;
+    background-size: 100%;
+    width: 50px;
+    height: 50px;
+}
+
+.notificationPreview-box.black-friday-bg.capsule-shape .notificationPreview-box-inner:before {
+    right: 45px;
+}
+
+.notificationPreview-box.black-friday-bg.capsule-shape .np-col-img {
+    border-radius: 50%;
+}
+
+.notificationPreview-box.black-friday-bg .card-body p.card-text {
+    color: #fff !important;
+}
+
+.notificationPreview-box.black-friday-bg .card-body h5.card-title {
+    color: #fff !important;
+}
+
+.notificationPreview-box.black-friday-bg .card-body .pur-time {
+    color: #6666ff;
+}
+
+/************* cyber_monday-bg BG **********************/
+.notificationPreview-box.cyber-monday-bg .notificationPreview-box-inner {
+    border: none;
+    background-image: url(../assets/img/cyber_monday-bg.png);
+    background-size: 100% 100%;
+    background-color: transparent;
+}
+
+.notificationPreview-box.cyber-monday-bg .notificationPreview-box-inner:before {
+    content: '';
+    position: absolute;
+    top: -16px;
+    z-index: 1;
+    right: 9px;
+    background: url(../assets/img/cyber-icon.png) 0 0 no-repeat;
+    background-size: 100%;
+    width: 80px;
+    height: 22px;
+}
+
+.notificationPreview-box.cyber-monday-bg.capsule-shape .notificationPreview-box-inner:before {
+    right: 45px;
+}
+
+.notificationPreview-box.cyber-monday-bg.capsule-shape .np-col-img {
+    border-radius: 50%;
+}
+
+.notificationPreview-box.cyber-monday-bg .card-body p.card-text {
+    color: #fff !important;
+}
+
+.notificationPreview-box.cyber-monday-bg .card-body h5.card-title {
+    color: #fff !important;
+}
+
+.notificationPreview-box.cyber-monday-bg .card-body .pur-time {
+    color: #fff;
+}
+
+#hide-sp {
+    width: 13px;
+    height: 13px;
+    position: absolute;
+    right: 5px;
+    top: 7px;
+    z-index: 9;
+    cursor: pointer;
+}
+
+.capsule-shape #hide-sp {
+    right: -2px;
+    top: 5px;
+}
+
+#hide-sp.hide-button {
+    display: none;
+}
+
+#hide-sp svg {
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    float: left;
+}
+
+#sp-stats-container {
+    position: fixed;
+    background: #fff;
+    opacity: 0.7;
+    width: 200px;
+    right: 10px;
+    color: #000;
+    padding: 5px;
+    font-size: 12px;
+    top: 50%;
+    box-shadow: 0 0 10px 0 rgba(0,0,0,0.75);
+    transform: translateY(-50%);
+    z-index: 999999;
+    font-family: sans-serif;
+}
+
+#sp-stats-container span {
+    text-align: center;
+    display: block;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+#sp-stats-container a {
+    color: #6666FF;
+}
+
+/*************** mobile ***************/
+
+@media screen and (max-width: 767px) {
+    .notifyjs-corner {
+        left: 50% !important;
+        transform: translateX(-50%);
+    }
+}
+
+@media screen and (max-width: 385px) {
+    .notificationPreview-box {
+        width: 320px;
+    }
+
+    .notificationPreview-box-inner {
+        width: 320px;
+    }
+
+    .notificationPreview-box .np-col-right {
+        width: 223px;
+        float: left;
+    }
+}
+.noti-image-rounded-2020.product-notification-image-2020 {
+    border: 1px solid #eee;
+    line-height: 10px;
+    padding: 11px 5px;
+}
+.noti-image-circle-2020.product-notification-image-2020 {
+    border: 1px solid #eee;
+    padding: 6px 5px;
+    border-radius: 50%;
+    height: 75px;
+    width: 75px;
+    display: flex;
+}
+.noti-image-circle-2020.product-notification-image-2020 img {
+    height: auto;
+    width: 50px;
+    margin: auto;
+    display: block;
+    max-height: 40px;
+}
+
+a#sp-notification .smbdg_item{ display:none }
+
+div.noti-bottom-45 {
+    bottom: 45px !important;
+}
+
+/************* christmas-NEW-BG **********************/
+.notificationPreview-box.christmas_new-bg .notificationPreview-box-inner {
+    border: none;
+    background-image: url(../assets/img/christmas_new-bg.png);
+    background-size: 100% 100%;
+    background-color: transparent;
+}
+
+/*.notificationPreview-box.christmas_new-bg .notificationPreview-box-inner:before {
+    content: '';
+    position: absolute;
+    top: -38px;
+    z-index: 1;
+    right: 20px;
+    background: url(../assets/img/xmas-icon_top.png) 0 0 no-repeat;
+    background-size: 100%;
+    width: 70px;
+    height: 55%;
+}*/
+
+.notificationPreview-box.christmas_new-bg.capsule-shape .np-col-img {
+    border-radius: 50%;
+}
+
+.notificationPreview-box.christmas_new-bg .card-body p.card-text {
+    color: #fff !important;
+}
+
+.notificationPreview-box.christmas_new-bg .card-body h5.card-title a{
+    color: #fff;
+}
+
+.notificationPreview-box.christmas_new-bg .card-body .pur-time {
+    color: #fff !important;
+}
+
+/************* valentine-NEW-BG **********************/
+.notificationPreview-box.valentine_new-bg .notificationPreview-box-inner {
+    border: none;
+    background-image: url(../assets/img/valentine_new-bg.png);
+    background-size: 100% 100%;
+    background-color: transparent;
+}
+
+/*.notificationPreview-box.valentine_new-bg .notificationPreview-box-inner:before {
+    content: '';
+    position: absolute;
+    top: -38px;
+    z-index: 1;
+    right: 20px;
+    background: url(../assets/img/valenlove.png) 0 0 no-repeat;
+    background-size: 100%;
+    width: 70px;
+    height: 55%;
+}*/
+
+.notificationPreview-box.valentine_new-bg.capsule-shape .np-col-img {
+    border-radius: 50%;
+}
+
+.notificationPreview-box.valentine_new-bg .card-body p.card-text {
+    color: #EB1F23 !important;
+}
+
+.notificationPreview-box.valentine_new-bg .card-body h5.card-title {
+    color: #EB1F23 !important;
+}
+
+.notificationPreview-box.valentine_new-bg .card-body h5.card-title a{
+    color: #EB1F23 !important;
+}
+
+.notificationPreview-box.valentine_new-bg .card-body .pur-time{
+    color: #fff;
+}
+
+.notificationPreview-box.valentine_new-bg .card-body .pur-time{
+    color: #EB1F23 !important;
+}
+
+/************* thanks-giving-NEW-BG **********************/
+.notificationPreview-box.thanks_giving_new-bg .notificationPreview-box-inner {
+    border: none;
+    background-image: url(../assets/img/thanks_giving_new-bg.png);
+    background-size: 100% 100%;
+    background-color: transparent;
+}
+
+/*.notificationPreview-box.thanks_giving_new-bg .notificationPreview-box-inner:before {
+    content: '';
+    position: absolute;
+    top: -40px;
+    z-index: 1;
+    right: 0;
+    background: url(../assets/img/thankstop.png) 0 0 no-repeat;
+    background-size: 100%;
+    width: 200px;
+    height: 50px;
+}*/
+
+.notificationPreview-box.thanks_giving_new-bg.capsule-shape .np-col-img {
+    border-radius: 50%;
+}
+
+.notificationPreview-box.thanks_giving_new-bg .card-body p.card-text {
+    color: #EB1F23 !important;
+}
+
+.notificationPreview-box.thanks_giving_new-bg .card-body h5.card-title {
+    color: #EB1F23 !important;
+}
+
+.notificationPreview-box.thanks_giving_new-bg .card-body h5.card-title a{
+    color: #ffc721 !important;
+}
+
+.notificationPreview-box.thanks_giving_new-bg .card-body .pur-time {
+    color: #ffc721 !important;
+}
+
+/************* black-friday-NEW-bg BG **********************/
+.notificationPreview-box.black_friday_new-bg .notificationPreview-box-inner {
+    border: none;
+    background-image: url(../assets/img/black_friday_new-bg.png);
+    background-size: 100% 100%;
+    background-color: transparent;
+}
+
+/*.notificationPreview-box.black_friday_new-bg .notificationPreview-box-inner:before {
+    content: '';
+    position: absolute;
+    top: -32px;
+    z-index: 1;
+    right: 9px;
+    background: url(../assets/img/black-fr.png) 0 0 no-repeat;
+    background-size: 100%;
+    width: 50px;
+    height: 50px;
+}*/
+
+.notificationPreview-box.black_friday_new-bg.capsule-shape .notificationPreview-box-inner:before {
+    right: 45px;
+}
+
+.notificationPreview-box.black_friday_new-bg.capsule-shape .np-col-img {
+    border-radius: 50%;
+}
+
+.notificationPreview-box.black_friday_new-bg .card-body p.card-text {
+    color: #fff !important;
+}
+
+.notificationPreview-box.black_friday_new-bg .card-body h5.card-title {
+    color: #fff !important;
+}
+
+.notificationPreview-box.black_friday_new-bg .card-body h5.card-title a{
+    color: #fff;
+}
+
+.notificationPreview-box.black_friday_new-bg .card-body .pur-time {
+    color: #6666ff;
+}
+
+.notificationPreview-box.black_friday_new-bg  .card-body .pur-time{
+    color: #fff !important;
+}
+
+/************* halloween-NEW-bg BG **********************/
+.notificationPreview-box.halloween_new-bg .notificationPreview-box-inner {
+    border: none;
+    background-image: url(../assets/img/halloween_new-bg.png);
+    background-size: 100% 100%;
+    background-color: transparent;
+}
+
+/*.notificationPreview-box.halloween_new-bg .notificationPreview-box-inner:before {
+    content: '';
+    position: absolute;
+    top: -38px;
+    z-index: 1;
+    right: 20px;
+    background: url(../assets/img/hallpump.png) 0 0 no-repeat;
+    background-size: 100%;
+    width: 70px;
+    height: 55%;
+}*/
+
+.notificationPreview-box.halloween_new-bg.capsule-shape .np-col-img {
+    border-radius: 50%;
+}
+
+.notificationPreview-box.halloween_new-bg .card-body p.card-text {
+    color: #fff !important;
+}
+
+.notificationPreview-box.halloween_new-bg .card-body h5.card-title {
+    color: #fff !important;
+}
+
+.notificationPreview-box.halloween_new-bg .card-body h5.card-title a{
+    color: #fff;
+}
+
+.notificationPreview-box.halloween_new-bg .card-body .pur-time{
+    color: #fff !important;
+}
+
+/************* CHINA-NEW-YEAR-bg BG **********************/
+.notificationPreview-box.china_new_year-bg .notificationPreview-box-inner {
+    border: none;
+    background-image: url(../assets/img/china_new_year-bg.png);
+    background-size: 100% 100%;
+    background-color: transparent;
+}
+
+/*.notificationPreview-box.china_new_year-bg .notificationPreview-box-inner:before {
+    content: '';
+    position: absolute;
+    top: -32px;
+    z-index: 1;
+    right: 9px;
+    background: url(../assets/img/black-fr.png) 0 0 no-repeat;
+    background-size: 100%;
+    width: 50px;
+    height: 50px;
+}*/
+
+.notificationPreview-box.china_new_year-bg.capsule-shape .notificationPreview-box-inner:before {
+    right: 45px;
+}
+
+.notificationPreview-box.china_new_year-bg.capsule-shape .np-col-img {
+    border-radius: 50%;
+}
+
+.notificationPreview-box.china_new_year-bg .card-body p.card-text {
+    color: #fff !important;
+}
+
+.notificationPreview-box.china_new_year-bg .card-body h5.card-title {
+    color: #fff !important;
+}
+
+.notificationPreview-box.china_new_year-bg .card-body h5.card-title a{
+    color: #fff;
+}
+
+.notificationPreview-box.china_new_year-bg .card-body .pur-time {
+    color: #6666ff;
+}
+
+.notificationPreview-box.china_new_year-bg  .card-body .pur-time{
+    color: #fff !important;
+}
+
+/************* RAINBOW-NEW-BG **********************/
+.notificationPreview-box.rainbow-bg .notificationPreview-box-inner {
+    border: none;
+    background-image: url(../assets/img/rainbow-bg.png);
+    background-size: 100% 100%;
+    background-color: transparent;
+}
+
+/*.notificationPreview-box.rainbow-bg .notificationPreview-box-inner:before {
+    content: '';
+    position: absolute;
+    top: -40px;
+    z-index: 1;
+    right: 0;
+    background: url(../assets/img/thankstop.png) 0 0 no-repeat;
+    background-size: 100%;
+    width: 200px;
+    height: 50px;
+}*/
+
+.notificationPreview-box.rainbow-bg.capsule-shape .np-col-img {
+    border-radius: 50%;
+}
+
+.notificationPreview-box.rainbow-bg .card-body p.card-text {
+    color: #EB1F23 !important;
+}
+
+.notificationPreview-box.rainbow-bg .card-body h5.card-title {
+    color: #EB1F23 !important;
+}
+
+.notificationPreview-box.rainbow-bg .card-body h5.card-title a{
+    color: #ffc721 !important;
+}
+
+.notificationPreview-box.rainbow-bg .card-body .pur-time {
+    color: #ffc721 !important;
+}
+
+
+/************* EID-bg BG **********************/
+.notificationPreview-box.eid-bg .notificationPreview-box-inner {
+    border: none;
+    background-image: url(../assets/img/eid-bg.png);
+    background-size: 100% 100%;
+    background-color: transparent;
+}
+
+/*.notificationPreview-box.eid-bg .notificationPreview-box-inner:before {
+    content: '';
+    position: absolute;
+    top: -32px;
+    z-index: 1;
+    right: 9px;
+    background: url(../assets/img/black-fr.png) 0 0 no-repeat;
+    background-size: 100%;
+    width: 50px;
+    height: 50px;
+}*/
+
+.notificationPreview-box.eid-bg.capsule-shape .notificationPreview-box-inner:before {
+    right: 45px;
+}
+
+.notificationPreview-box.eid-bg.capsule-shape .np-col-img {
+    border-radius: 50%;
+}
+
+.notificationPreview-box.eid-bg .card-body p.card-text {
+    color: #fff !important;
+}
+
+.notificationPreview-box.eid-bg .card-body h5.card-title {
+    color: #fff !important;
+}
+
+.notificationPreview-box.eid-bg .card-body h5.card-title a{
+    color: #fff;
+}
+
+.notificationPreview-box.eid-bg .card-body .pur-time {
+    color: #6666ff;
+}
+
+.notificationPreview-box.eid-bg  .card-body .pur-time{
+    color: #fff !important;
+}
+
+/************* DIWALI-bg BG **********************/
+.notificationPreview-box.diwali-bg .notificationPreview-box-inner {
+    border: none;
+    background-image: url(../assets/img/diwali-bg.png);
+    background-size: 100% 100%;
+    background-color: transparent;
+}
+
+/*.notificationPreview-box.diwali-bg .notificationPreview-box-inner:before {
+    content: '';
+    position: absolute;
+    top: -32px;
+    z-index: 1;
+    right: 9px;
+    background: url(../assets/img/black-fr.png) 0 0 no-repeat;
+    background-size: 100%;
+    width: 50px;
+    height: 50px;
+}*/
+
+.notificationPreview-box.diwali-bg.capsule-shape .notificationPreview-box-inner:before {
+    right: 45px;
+}
+
+.notificationPreview-box.diwali-bg.capsule-shape .np-col-img {
+    border-radius: 50%;
+}
+
+.notificationPreview-box.diwali-bg .card-body p.card-text {
+    color: #fff !important;
+}
+
+.notificationPreview-box.diwali-bg .card-body h5.card-title {
+    color: #fff !important;
+}
+
+.notificationPreview-box.diwali-bg .card-body h5.card-title a{
+    color: #fff;
+}
+
+.notificationPreview-box.diwali-bg .card-body .pur-time {
+    color: #6666ff;
+}
+
+.notificationPreview-box.diwali-bg  .card-body .pur-time{
+    color: #fff !important;
+}
+
+/************* EASTER-bg BG **********************/
+.notificationPreview-box.easter-bg .notificationPreview-box-inner {
+    border: none;
+    background-image: url(../assets/img/easter-bg.png);
+    background-size: 100% 100%;
+    background-color: transparent;
+}
+/*.notificationPreview-box.easter-bg .notificationPreview-box-inner:before {
+    content: '';
+    position: absolute;
+    top: -16px;
+    z-index: 1;
+    right: 9px;
+    background: url(../assets/img/cyber-icon.png) 0 0 no-repeat;
+    background-size: 100%;
+    width: 80px;
+    height: 22px;
+}*/
+.notificationPreview-box.easter-bg.capsule-shape .notificationPreview-box-inner:before {
+    right: 45px;
+}
+.notificationPreview-box.easter-bg.capsule-shape .np-col-img {
+    border-radius: 50%;
+}
+.notificationPreview-box.easter-bg .card-body p.card-text {
+    color: #fff !important;
+}
+.notificationPreview-box.easter-bg .card-body h5.card-title {
+    color: #fff !important;
+}
+.notificationPreview-box.easter-bg .card-body h5.card-title a{
+    color: #fff;
+}
+.notificationPreview-box.easter-bg .card-body .pur-time {
+    color: #fff;
+/* Custom alert app-wise for few seconds */
+}
+.info-custom-alert {
+    position: fixed;
+    z-index: 520;
+    right: 0;
+    left: 0;
+    text-align: center;
+    bottom: var(--global-ribbon-height,15px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.custom-alert-content {
+    background-color: rgba(31, 31, 31, 0.9);
+    padding: 20px 45px 18px 20px;
+    color: #fff;
+    position: relative;
+    border-radius: 5px;
+}
+
+.text-content-alert {
+    font-size: 20px !important;
+}
+
+.alert-close-action {
+    position: absolute;
+    right: 17px;
+    top: 20px;
+    cursor: pointer;
+    font-size: 20px;
+}

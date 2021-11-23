@@ -1,0 +1,107 @@
+/*************** <TIME COUNTDOWN> ***************/
+.message-title {
+    margin: 0px 5px 5px 6px;
+}
+
+.clock-section {
+    padding: 0 5px;
+    display: inline-block;
+    position: relative;
+}
+
+.numbers {
+    display: inline-block;
+}
+
+.labels {
+    line-height: 15px;
+    text-transform: uppercase;
+}
+
+.colon {
+    position: relative;
+    top: -19px;
+    display: inline-block;
+    font-weight: 600;
+    font-size: 16px;
+    color: #FF6666;
+}
+
+
+.timer-font-size-10px {
+    font-size: 10px;
+}
+
+.timer-font-size-11px {
+    font-size: 11px;
+}
+
+.timer-font-size-12px {
+    font-size: 12px;
+}
+
+.timer-font-size-14px {
+    font-size: 14px;
+}
+
+.timer-font-size-16px {
+    font-size: 16px;
+}
+
+.timer-font-size-18px {
+    font-size: 18px;
+}
+
+.timer-font-size-20px {
+    font-size: 20px;
+}
+
+.timer-font-size-inherit {
+    font-size: inherit;
+}
+
+.timer-font-weight-bold {
+    font-weight: bold;
+}
+
+.timer-font-weight-inherit {
+    font-weight: inherit;
+}
+
+.timer-center {
+    text-align: center;
+}
+
+.timer-left {
+    text-align: left;
+}
+
+.timer-right {
+    text-align: right;
+}
+
+.timer-font-family-arial {
+    font-family: Arial;
+}
+
+.timer-font-family-verdana {
+    font-family: Verdana;
+}
+
+.timer-font-family-times {
+    font-family: Times New Roman;
+}
+
+.timer-font-family-inherit {
+    font-family: inherit;
+}
+
+.timer-hide {
+    display: none;
+}
+
+.timer-store-front {
+    width: 100%;
+    margin-bottom: 14px;
+}
+/*************** </TIME COUNTDOWN> ***************/

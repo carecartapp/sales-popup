@@ -1,0 +1,130 @@
+@import url('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+
+.sold-counter-content-box {
+    clear: both;
+    display: block;
+    content: "";
+    width: 100%;
+    height: 65px;
+    margin-top: 10px;
+}
+
+.sold-text {
+    display: flex;
+    position: relative;
+    width: 100%;
+    word-wrap: break-word;
+    background-clip: border-box;
+    border-radius: .25rem;
+    min-height: 50px;
+}
+
+.content-div-sold-detail {
+    /*font-size: 16px;*/
+    font-size: 15px;
+    align-self: center;
+    margin: 0;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+    width: 100%;
+    padding-left: 5px;
+}
+
+span.icon-specific-text {
+    color: #FF6666;
+}
+
+.sold-dark-background {
+    background-color: #000000;
+}
+
+.sold-dark-font {
+    color: #FFFFFF;
+}
+
+.sold-dark-icon {
+    color: #FFFFFF;   
+}
+
+.sold-dark-count {
+    color: #FFFFFF;
+}
+
+.sold-light-background {
+    /*background-color: #FFFFFF;*/
+}
+
+.sold-light-font {
+    color: #000000;
+}
+
+.sold-light-icon {
+    color: #000000;   
+}
+
+.sold-light-count {
+    color: #000000;
+}
+
+.sold-capsule {
+    border-radius: 28px;
+}
+
+.sold-font-family-arial {
+    font-family: Arial;
+}
+
+.sold-font-family-verdana {
+    font-family: Verdana;
+}
+
+.sold-font-family-times {
+    font-family: Times New Roman;
+}
+
+.sold-font-family-inherit {
+    font-family: inherit;
+}
+
+.sold-font-size-13px {
+    font-size: 13px;
+}
+
+.sold-font-size-14px {
+    font-size: 14px;
+}
+
+.sold-font-size-15px {
+    font-size: 15px;
+}
+
+.sold-font-size-inherit {
+    font-size: inherit;
+}
+
+.sold-center {
+    text-align: center;
+}
+
+.sold-left {
+    text-align: left;
+    padding-left: 6px;
+}
+
+.sold-right {
+    text-align: right;
+    padding-right: 6px;
+}
+
+.sold-font-weight-bold {
+    font-weight: bold;
+}
+
+.sold-font-weight-inherit {
+    font-weight: inherit;
+}
+
+button.shopify-payment-button__button--hidden {
+    display: none;
+}
