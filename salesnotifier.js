@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 1.2.25
+ * @version 1.2.26
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -43,7 +43,7 @@
      
      scriptInjection("https://cdnjs.cloudflare.com/ajax/libs/Swiper/5.4.5/js/swiper.min.js");
  
-     var version = "1.2.25";
+     var version = "1.2.26";
  
      function notifyPopup($) {
          //IE8 indexOf polyfill
@@ -667,7 +667,7 @@
  
          // return with production URLs
          if (thisLibUrl === "") {
-             return {
+             /*return {
                  "backend": "https://tracking-sales-pop.carecart.io/index.php/FrontController/",
                  "css": "https://sales-pop.carecart.io/public/front_assets/new-ui/css/notif-box.css",
                  "cssStock": "https://sales-pop.carecart.io/lib/stock-box.css",
@@ -677,6 +677,18 @@
                  "cssQuick": "https://sales-pop.carecart.io/lib/quick-box.css",
                  "cssTrustBadges": "https://sales-pop.carecart.io/lib/badges-box.css",
                  "legacyCss": "https://sales-pop.carecart.io/lib/salesnotifier.css"
+             };*/
+
+             return {
+                 "backend": "https://tracking-sales-pop.carecart.io/index.php/FrontController/",
+                 "css": "https://cdn.jsdelivr.net/gh/carecartapp/sales-popup@master/notif-box.css",
+                 "cssStock": "https://cdn.jsdelivr.net/gh/carecartapp/sales-popup@master/stock-box.css",
+                 "cssTimer": "https://cdn.jsdelivr.net/gh/carecartapp/sales-popup@master/timer-box.css",
+                 "cssVisitor": "https://cdn.jsdelivr.net/gh/carecartapp/sales-popup@master/visitor-box.css",
+                 "cssSold": "https://cdn.jsdelivr.net/gh/carecartapp/sales-popup@master/sold-box.css",
+                 "cssQuick": "https://cdn.jsdelivr.net/gh/carecartapp/sales-popup@master/quick-box.css",
+                 "cssTrustBadges": "https://cdn.jsdelivr.net/gh/carecartapp/sales-popup@master/badges-box.css",
+                 "legacyCss": "https://cdn.jsdelivr.net/gh/carecartapp/sales-popup@master/salesnotifier.css"
              };
          }
  
@@ -696,7 +708,7 @@
              backend = "https://uat-tracking-sales-pop.carecart.io/index.php/FrontController/";
          }
  
-         return {
+         /*return {
              "backend": backend,
              "css": "https://" + tempAnchorTag.hostname + "/public/front_assets/new-ui/css/notif-box.css?v" + version,
              "cssStock": "https://" + tempAnchorTag.hostname + "/lib/stock-box.css?v" + version,
@@ -706,6 +718,18 @@
              "cssQuick": "https://" + tempAnchorTag.hostname + "/lib/quick-box.css?v" + version,
              "cssTrustBadges": "https://" + tempAnchorTag.hostname + "/lib/badges-box.css?v" + version,
              "legacyCss": "https://" + tempAnchorTag.hostname + "/lib/salesnotifier.css"
+         };*/
+
+         return {
+             "backend": backend,
+             "css": "https://cdn.jsdelivr.net/gh/carecartapp/sales-popup@master/notif-box.css",
+             "cssStock": "https://cdn.jsdelivr.net/gh/carecartapp/sales-popup@master/stock-box.css",
+             "cssTimer": "https://cdn.jsdelivr.net/gh/carecartapp/sales-popup@master/timer-box.css",
+             "cssVisitor": "https://cdn.jsdelivr.net/gh/carecartapp/sales-popup@master/visitor-box.css",
+             "cssSold": "https://cdn.jsdelivr.net/gh/carecartapp/sales-popup@master/sold-box.css",
+             "cssQuick": "https://cdn.jsdelivr.net/gh/carecartapp/sales-popup@master/quick-box.css",
+             "cssTrustBadges": "https://cdn.jsdelivr.net/gh/carecartapp/sales-popup@master/badges-box.css",
+             "legacyCss": "https://cdn.jsdelivr.net/gh/carecartapp/sales-popup@master/salesnotifier.css"
          };
      }
  
