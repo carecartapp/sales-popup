@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 1.2.26
+ * @version 1.2.27
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -43,7 +43,7 @@
      
      scriptInjection("https://cdnjs.cloudflare.com/ajax/libs/Swiper/5.4.5/js/swiper.min.js");
  
-     var version = "1.2.26";
+     var version = "1.2.27";
  
      function notifyPopup($) {
          //IE8 indexOf polyfill
@@ -1553,7 +1553,7 @@
              $jq321(".pur-time").html(timeDifference);
          }
          
-         saveImpression(1);
+         //saveImpression(1);
      };
  
  
