@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 1.2.27
+ * @version 1.2.28
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -43,7 +43,7 @@
      
      scriptInjection("https://cdnjs.cloudflare.com/ajax/libs/Swiper/5.4.5/js/swiper.min.js");
  
-     var version = "1.2.27";
+     var version = "1.2.28";
  
      function notifyPopup($) {
          //IE8 indexOf polyfill
@@ -1311,6 +1311,19 @@
  
              trustBadges(apiResponse.trustBadges);
          }
+      
+         //Timer on collections
+        if (apiResponse && apiResponse.timerCollection && apiResponse.timerCollectionPagesStatus == 1) {
+            setTimeout(function () {
+                $jq321("head").append($jq321("<link/>", {
+                    rel: "stylesheet",
+                    href: serverUrl.cssTimer + "?v" + version
+                }));
+            }, 1000);
+            setTimeout(function () {
+                collectionTimer(apiResponse.timerCollection, apiResponse.timerCollectionOff);
+            }, 2000);
+        }
          
          if (shouldStatsBeShown()) {
              printConfigForNerds();
@@ -2315,6 +2328,144 @@
      // console.log(result);
      };
  // ---------------------------------- </PAYMENT PLAN> --------------------------------
+  
+        // ---------------------------------- <TIMER FOR COLLECTION PAGE> --------------------------
+// ******************************************************************************************
+    function getTimeRemainingForCollection(endtime) {
+        var now = new Date;
+        var utc_timestamp = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),
+            now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds());
+
+        /* New Hack for Safari */
+        var s = endtime;
+        var a = s.split(/[^0-9]/);
+        var endtime = new Date(a[0], a[1] - 1, a[2], a[3], a[4], a[5]);
+
+        var t = endtime - utc_timestamp;
+        /* END  New Hack for Safari */
+
+        var seconds = Math.floor((t / 1000) % 60);
+        var minutes = Math.floor((t / 1000 / 60) % 60);
+        var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+        var days = Math.floor(t / (1000 * 60 * 60 * 24));
+        return {
+            'total': t,
+            'days': days,
+            'hours': hours,
+            'minutes': minutes,
+            'seconds': seconds
+        };
+    }
+
+    function initializeClockCollection(id, endtime) {
+        var daysSpan = document.getElementsByClassName('daysc');
+        var hoursSpan = document.getElementsByClassName('hoursc');
+        var minutesSpan = document.getElementsByClassName('minutesc');
+        var secondsSpan = document.getElementsByClassName('secondsc');
+
+        function updateClock() {
+            var t = getTimeRemainingForCollection(endtime);
+
+            daysSpan.innerHTML = t.days;
+            hoursSpan.innerHTML = ('0' + t.hours).slice(-2);
+            minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
+            secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
+
+            $jq321(".daysc").html(t.days);
+            $jq321(".hoursc").html(t.hours);
+            $jq321(".minutesc").html(t.minutes);
+            $jq321(".secondsc").html(t.seconds);
+
+            if (t.days == 0 && t.hours == 0 && t.minutes == 0 && t.seconds == 0) {
+                clearInterval(timeinterval);
+            }
+        }
+
+        updateClock();
+        var timeinterval = setInterval(updateClock, 1000);
+    }
+
+    function collectionTimer(responseTimer, responseTimerCollection) {
+        var allLinks = [];
+        var product_id = (meta.product && meta.product.id) ? meta.product.id : '';
+
+        if (product_id == '') {
+            $jq321("a").each(function () {
+                var href = $jq321(this).attr('href');
+                var url = href.split("/");
+                    if (($jq321.inArray("products", url) != -1)) {
+                    if ($jq321.inArray(href, allLinks) == -1) {
+                        allLinks.push(href);
+                    }
+                }
+            });
+        }
+        else {
+            $jq321("a").each(function () {
+                var href = $jq321(this).attr('href');
+
+                var url = href.split("/");
+
+                if ($jq321.inArray("products", url) != -1) {
+                    var otherurl = href.split("=");
+
+                    var res = otherurl[0].split("?");
+
+                    if (res[1] == 'pr_prod_strat') {
+                        allLinks.push(href);
+                    }
+                }
+            });
+        }
+
+        function checkValue(value, arr) {
+            var status = 'Not exist';
+            if(arr === null) return status;
+            for (var i = 0; i < arr.length; i++) {
+                var name = arr[i];
+                if (name == value) {
+                    status = 'Exist';
+                    break;
+                }
+            }
+            return status;
+        }
+
+        if (product_id == '') {
+            if (allLinks.length != 0) {
+                for (var u = 0; u < allLinks.length; u++) {
+                    if (checkValue(allLinks[u], responseTimerCollection) == 'Not exist') {
+                        var selectorTimeView = $jq321("[href='" + allLinks[u] + "']");
+                        selectorTimeView = selectorTimeView[0];
+                        console.log(selectorTimeView);
+                        $jq321(responseTimer.view).insertBefore(selectorTimeView);
+                    }
+                }
+            }
+        }
+        else {
+            var allLinksC = [];
+            var product = null;
+            for (var q = 0; q < allLinks.length; q++) {
+                product = allLinks[q].substring(0, allLinks[q].indexOf('?') + 1);
+                product = product.replace(/\?/g, '');
+                product = '/collections/all' + product;
+
+                allLinksC.push(product);
+            }
+
+            for (var u = 0; u < allLinks.length; u++) {
+                if (checkValue(allLinksC[u], responseTimerCollection) == 'Not exist') {
+                    var selectorTimeView = $jq321("[href='" + allLinks[u] + "']");
+                    $jq321(responseTimer.view).insertBefore(selectorTimeView);
+                }
+            }
+        }
+
+        var deadline = responseTimer.time;
+        initializeClockCollection('clockdivpreviewSalesCollection', deadline);
+    }
+// ---------------------------------- </TIMER FOR COLLECTION PAGE> --------------------------------
  
      
      
