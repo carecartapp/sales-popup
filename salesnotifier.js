@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 2.0.0
+ * @version 3.0.0
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -42,7 +42,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
     scriptInjection("https://cdnjs.cloudflare.com/ajax/libs/Swiper/5.4.5/js/swiper.min.js");
 
-    var version = "2.0.0";
+    var version = "3.0.0";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -1186,15 +1186,35 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
         // STOCK COUNTDOWN CALL
         if (apiResponse && apiResponse.stock && apiResponse.stock !== null) {
-            if (apiResponse.stock.on_off == 1) {
-                $jq321("head").append($jq321("<link/>", {
-                    rel: "stylesheet",
-                    href: serverUrl.cssStock + "?v" + version
-                }));
-                stockCountdown(apiResponse.stock);
-            }
+            if (apiResponse.stock.on_off == 1)
+            {
+                if(apiResponse.stock.stock_restriction_settings !== null){
+                    let stock_restriction_setting = JSON.parse(apiResponse.stock.stock_restriction_settings);
+                    if(stock_restriction_setting.stock_restriction_check == "on" && parseInt(stock_restriction_setting.stock_restriction_value) !== parseInt(apiResponse.stock.left_stock) && parseInt(apiResponse.stock.left_stock) > parseInt(stock_restriction_setting.stock_restriction_value)){
+                        console.log("SP: Stock restricted to display");
+                    } else {
+                        $jq321("head").append($jq321("<link/>", {
+                            rel: "stylesheet",
+                            href: serverUrl.cssStock + "?v" + version
+                        }));
+                        stockCountdown(apiResponse.stock);
+                        if (apiResponse.stock.variantCheck && apiResponse.stock.variantCheck == 1 && apiResponse.stock.variantsData !== null && apiResponse.stock.variantsData.length > 1) {
+                            enableStockForVariants(apiResponse.stock.variantsData, apiResponse.stock.variantHeading);
+                        }
+                    }
+                } else {
+                    $jq321("head").append($jq321("<link/>", {
+                        rel: "stylesheet",
+                        href: serverUrl.cssStock + "?v" + version
+                    }));
+                    stockCountdown(apiResponse.stock);
+                    if (apiResponse.stock.variantCheck && apiResponse.stock.variantCheck == 1 && apiResponse.stock.variantsData !== null && apiResponse.stock.variantsData.length > 1) {
+                        enableStockForVariants(apiResponse.stock.variantsData, apiResponse.stock.variantHeading);
+                    }
+                }
+             }
         }
-
+              
         // Time COUNTDOWN CALL
         if (apiResponse && apiResponse.timer && apiResponse.timer !== null) {
             /*$jq321("head").append($jq321("<link/>", {
@@ -1321,7 +1341,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                         href: serverUrl.cssAnnouncement + "?v" + version
                     }));
         
-                    announcementBar(apiResponse.announcementBar);
+                    setTimeout(function () { announcementBar(apiResponse.announcementBar); }, 2000);
                 }
             }
         }
@@ -1557,7 +1577,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             $jq321(".pur-time").html(timeDifference);
         }
 
-        saveImpression(1);
+        // saveImpression(1); Imression save call removed for now
     };
 
 
@@ -1738,6 +1758,137 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             });
         });
     });
+
+    /** Stock for variants **/
+    function makeSelectors(variantHeading) {
+        
+        let formSelector;
+        let allForms = $jq321("form[action]");
+        $jq321.each(allForms, function (key, value) {
+            var formUrls = value.action;
+            if (formUrls.indexOf('/cart/add') > -1) {
+                formSelector = $jq321(value);
+            }
+        });
+
+        if (formSelector.length > 0) {
+            let variantSelector1 = $jq321(formSelector).find("select");
+            let variantSelector2 = $jq321(':contains("' + variantHeading + '")').find("input[type='radio']");
+            let variantSelector3 = $jq321(':contains("' + variantHeading + '")').find("select");
+
+            /** Make the final selectors **/
+            if (variantSelector2.length > 0) {
+                return { "selector_number": 2, "selector_value": variantSelector2 };
+            } else if (variantSelector1.length > 0) {
+                return { "selector_number": 1, "selector_value": variantSelector1 };
+            } else if (variantSelector3.length > 0) {
+                return { "selector_number": 3, "selector_value": variantSelector3 };
+            }
+            return false;
+        }
+    }
+
+    function stockForSelectedVariant(string, data) {
+        if (string !== "") {
+            $jq321.each(data, function (key, value) {
+                if (value.title == string) {
+                    let stockCountSpan = $jq321("#carecart-salespop-sc-number");
+                    if (stockCountSpan.length > 0) {
+                        $jq321(stockCountSpan).html(value.inventory_quantity);
+                        let stockPercentage = Math.round((parseInt(value.inventory_quantity) / 100) * 100);
+                        stockPercentage = stockPercentage + "%";
+                        $jq321(".stock-progress-foreground").width(stockPercentage);
+                        console.log("SP: Stock for selected variant");
+                }
+            }
+       });
+    }
+    }
+
+    function enableStockForVariants(variantsData, variantHeading) {
+
+        $jq321(document).ready(function () { 
+
+            let getSelectors = makeSelectors(variantHeading);
+            if (getSelectors != false) {
+
+                /** Let's define options here **/
+                let availableOptions = 0;
+                if (variantsData[0]["option1"] !== null && variantsData[0]["option2"] !== null && variantsData[0]["option3"] === null) {
+                    availableOptions = 1;
+                } else if (variantsData[0]["option1"] !== null && variantsData[0]["option2"] !== null && variantsData[0]["option3"] !== null) {
+                    availableOptions = 2;
+                }
+                /** Let's define options here **/
+                
+                /** Make the final selectors **/
+                if (getSelectors.selector_number == 2) {
+                    let selectedVariantsValuesString = '';
+                    $jq321.each(getSelectors.selector_value, function (key, value) {
+                        
+                        attachEventOnOptions(value, variantsData);
+                        var val = this.checked ? true : false;
+                        if (val) {
+                            selectedVariantsValuesString = selectedVariantsValuesString+ $jq321(value).val() + " / ";
+                        }
+                    });
+                    selectedVariantsValuesString = selectedVariantsValuesString.trim();
+                    selectedVariantsValuesString = selectedVariantsValuesString.slice(0, -1);
+                    selectedVariantsValuesString = selectedVariantsValuesString.trim();
+                    stockForSelectedVariant(selectedVariantsValuesString, variantsData);
+                } else if (getSelectors.selector_number == 1) {
+
+                    let selectedVariantsValuesString = '';
+                    for (let i = 0; i <= availableOptions; i++) {
+                        attachEventOnOptions(getSelectors.selector_value[i], variantsData);
+                        selectedVariantsValuesString = selectedVariantsValuesString + $jq321(getSelectors.selector_value[i]).find(":selected").val() + " / ";
+                    }
+
+                    selectedVariantsValuesString = selectedVariantsValuesString.trim();
+                    selectedVariantsValuesString = selectedVariantsValuesString.slice(0, -1);
+                    selectedVariantsValuesString = selectedVariantsValuesString.trim();
+                    stockForSelectedVariant(selectedVariantsValuesString, variantsData);
+                } else if (getSelectors.selector_number == 3) {
+                    let selectedVariantsValuesString = '';
+                    for (let i = 0; i <= availableOptions; i++) {
+                        attachEventOnOptions(getSelectors.selector_value[i], variantsData);
+                        selectedVariantsValuesString = selectedVariantsValuesString + $jq321(getSelectors.selector_value[i]).find(":selected").val() + " / ";
+                    }
+                    selectedVariantsValuesString = selectedVariantsValuesString.trim();
+                    selectedVariantsValuesString = selectedVariantsValuesString.slice(0, -1);
+                    selectedVariantsValuesString = selectedVariantsValuesString.trim();
+                    stockForSelectedVariant(selectedVariantsValuesString, variantsData);
+                }
+            }
+            /** Make the final selectors **/
+        });
+    }
+
+    function attachEventOnOptions(variantSelector, variantsData)
+    {
+        console.log("SP: variant selector found");
+        $jq321(variantSelector).on("change", function () { 
+            setTimeout(function () {
+
+                let urlParams = new URLSearchParams(window.location.search);
+                let variantID = urlParams.get('variant');
+                if (variantsData !== null && variantID !== null) {
+                    $jq321.each(variantsData, function (key, value) {
+                        if (value.id == variantID) {
+                            let stockCountSpan = $jq321("#carecart-salespop-sc-number");
+                            if (stockCountSpan.length > 0) {
+                                $jq321(stockCountSpan).html(value.inventory_quantity);
+                                let stockPercentage = Math.round((parseInt(value.inventory_quantity) / 100) * 100);
+                                stockPercentage = stockPercentage + "%";
+                                $jq321(".stock-progress-foreground").width(stockPercentage);
+                        }
+                    }
+               });
+            }
+            }, 1000);
+            }); 
+    }
+    /** Stock for variants ends **/
 
 
     function stockCountdown(responseStock) {
@@ -2427,7 +2578,12 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         {
             selectorAnnouncementBar.append(announcementBarResponse.view);
         }
-        	
+
+        //Free shipping bar starts from here
+        if (announcementBarResponse.free_ship_settings !== null) {
+            doCalculationForShipping(announcementBarResponse.free_ship_settings);
+            addCartInterval(announcementBarResponse.free_ship_settings);
+        }	
 	}
     
     $jq321("body").on('click', '#ccannouncement-close', function (e) {
@@ -2443,6 +2599,40 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         return (typeof cookie == "null" || typeof cookie == "undefined" || cookie === "") ? false : true;
     }
 
+    function addCartInterval(settings) { 
+        setInterval(function () {
+        doCalculationForShipping(settings);
+        }, 2000);
+    }
+
+    function doCalculationForShipping(settings)
+    {
+        var cartContents = fetch('/cart.json', {method: 'GET'})
+            .then(response => response.json())
+            .then(data => {
+                let cartValue = data.items;
+                if (cartValue.length == 0) {
+                    console.log("SP: Cart is empty");
+                    let initialMessage = settings.initial_message;
+                    initialMessage = initialMessage.replace("{{amount}}", settings.goal_value);
+                    initialMessage = initialMessage.replace("{{button}}", settings.button);
+                    initialMessage = initialMessage.replace("{{coupon}}", settings.coupon);
+                    $jq321(".getDiscoundText").html(initialMessage);
+                } else {
+                    let cartPrice = data.total_price;
+                    cartPrice = Math.floor(cartPrice / 1e2);
+                    let actualGoal = parseInt(settings.goal_value);
+                    if (cartPrice >= actualGoal) {
+                    $jq321(".getDiscoundText").html(settings.goal_message);
+                    } else if (cartPrice < actualGoal) {
+                        let remainingAmount = actualGoal - cartPrice;
+                        let progressMessage = settings.progress_message;
+                        progressMessage = progressMessage.replace("{{remaining_amount}}", remainingAmount);
+                        $jq321(".getDiscoundText").html(progressMessage);
+                    }
+                }
+            });
+    }
     // ---------------------------------- </ANNOUNCEMENT BAR MODULE> --------------------------------
 });
 
