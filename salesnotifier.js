@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 3.0.0
+ * @version 3.1.0
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -42,7 +42,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
     scriptInjection("https://cdnjs.cloudflare.com/ajax/libs/Swiper/5.4.5/js/swiper.min.js");
 
-    var version = "3.0.0";
+    var version = "3.1.0";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -700,6 +700,9 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         {
             backend = "http://localhost:8500/index.php/FrontController/";
         }
+        else if ("helpless-insect-91.telebit.io" === tempAnchorTag.hostname) {
+            backend = "http://localhost:8500/index.php/FrontController/";
+        }
 
         return {
             "backend": backend,
@@ -1240,6 +1243,11 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                 href: serverUrl.cssVisitor + "?v" + version
             }));
 
+            if(apiResponse.visitor.start_visitor_counter !=null && apiResponse.visitor.end_visitor_counter !=null ){
+
+                customVisitors(apiResponse.visitor.start_visitor_counter, apiResponse.visitor.end_visitor_counter);
+            }
+
             visitorCounter(apiResponse.visitor);
         }
 
@@ -1487,7 +1495,9 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     };
 
     window.showSalesPopup = function (popUpIndexToDisplay) {
-
+        if (apiResponse.allNotifications[popUpIndexToDisplay] == undefined) {
+            return;
+        }
         var now = new Date;
         var utc_timestamp = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),
             now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds());
@@ -1498,16 +1508,28 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         var timeDifference = utc_timestamp - endtime;
         timeDifference = Math.floor((timeDifference / 1000) / 60);
 
+        /**
+         * Translated words
+         */
+        let minuteAgo = " minute(s) ago";
+        let hourAgo = " minute(s) ago";
+        let daysAgo = " day(s) ago";
+        if (apiResponse.timeAgoTranslatedData) { 
+            minuteAgo = (apiResponse.timeAgoTranslatedData.minutes_ago !== "") ? " " +apiResponse.timeAgoTranslatedData.minutes_ago : minuteAgo;
+            hourAgo = (apiResponse.timeAgoTranslatedData.hours_ago !== "") ? " " +apiResponse.timeAgoTranslatedData.hours_ago : hourAgo;
+            daysAgo = (apiResponse.timeAgoTranslatedData.days_ago !== "") ?  " " + apiResponse.timeAgoTranslatedData.days_ago : daysAgo;
+        }
+
         if (timeDifference >= 60) {
             timeDifference = Math.floor(timeDifference / 60);
             if (timeDifference >= 24) {
                 timeDifference = Math.floor(timeDifference / 24);
-                timeDifference = Math.abs(timeDifference) + " day(s) ago";
+                timeDifference = Math.abs(timeDifference) + daysAgo;
             }
             else {
-                timeDifference = Math.abs(timeDifference) + " hour(s) ago";
+                timeDifference = Math.abs(timeDifference) + hourAgo;
             }
-        } else { timeDifference = Math.abs(timeDifference) + " minute(s) ago" }
+        } else { timeDifference = Math.abs(timeDifference) + minuteAgo; }
 
         if (isHidePopupCookieSet()) {
             return false;
@@ -1805,6 +1827,42 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     }
     }
 
+    // CUSTOM VISITOR COUNTER
+
+    function customVisitors(start_limit_number, end_limit_number ){
+        
+        let randomNumber = Math.floor(Math.random() * (end_limit_number - start_limit_number + 1) + parseInt(start_limit_number) );
+
+       setInterval(changeRandomNumber,3000);
+
+       function changeRandomNumber(){
+
+            if(Math.floor((Math.random() * 2))){
+
+                randomNumberTen = Math.floor((Math.random() * 10) + 1);
+                randomNumber = parseInt(randomNumber) +  parseInt(randomNumberTen);
+             
+                if (randomNumber > end_limit_number){
+                    randomNumber = end_limit_number;
+                }
+    
+            }
+    
+            else{
+    
+            randomNumberTen = Math.floor((Math.random() * 10) + 1);
+            randomNumber = parseInt(randomNumber) - parseInt(randomNumberTen);;
+    
+                if (randomNumber < start_limit_number){
+                    randomNumber = start_limit_number;
+                }
+            }
+             
+        $jq321("#carecart-salespop-visitor-number").html(randomNumber);
+       }
+
+     }
+
     function enableStockForVariants(variantsData, variantHeading) {
 
         $jq321(document).ready(function () { 
@@ -1889,7 +1947,6 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             }); 
     }
     /** Stock for variants ends **/
-
 
     function stockCountdown(responseStock) {
 
@@ -2245,10 +2302,11 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         if (product_id == '') {
             $jq321("a").each(function () {
                 var href = $jq321(this).attr('href');
-                var url = href.split("/");
-
-                if ($jq321.inArray("products", url) != -1) {
-                    allLinks.push(href);
+                if (href !== "/" && href !== undefined && href !== "#") {
+                    var url = href.split("/");
+                    if ($jq321.inArray("products", url) != -1) {
+                        allLinks.push(href);
+                    }   
                 }
             });
         }
