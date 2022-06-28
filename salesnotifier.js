@@ -1512,7 +1512,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
          * Translated words
          */
         let minuteAgo = " minute(s) ago";
-        let hourAgo = " minute(s) ago";
+        let hourAgo = " hour(s) ago";
         let daysAgo = " day(s) ago";
         if (apiResponse.timeAgoTranslatedData) { 
             minuteAgo = (apiResponse.timeAgoTranslatedData.minutes_ago !== "") ? " " +apiResponse.timeAgoTranslatedData.minutes_ago : minuteAgo;
