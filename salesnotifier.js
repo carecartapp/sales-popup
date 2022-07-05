@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 3.1.1
+ * @version 1.2.25
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -42,7 +42,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
     scriptInjection("https://cdnjs.cloudflare.com/ajax/libs/Swiper/5.4.5/js/swiper.min.js");
 
-    var version = "3.1.1";
+    var version = "1.2.25";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -1191,7 +1191,8 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         if (apiResponse && apiResponse.stock && apiResponse.stock !== null) {
             if (apiResponse.stock.on_off == 1)
             {
-                if(apiResponse.stock.stock_restriction_settings !== null){
+                if (apiResponse.stock.stock_restriction_settings !== null && apiResponse.stock.variantCheck == 0) {
+                    console.log("in the if statement")
                     let stock_restriction_setting = JSON.parse(apiResponse.stock.stock_restriction_settings);
                     if(stock_restriction_setting.stock_restriction_check == "on" && parseInt(stock_restriction_setting.stock_restriction_value) !== parseInt(apiResponse.stock.left_stock) && parseInt(apiResponse.stock.left_stock) > parseInt(stock_restriction_setting.stock_restriction_value)){
                         console.log("SP: Stock restricted to display");
@@ -1202,19 +1203,28 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                         }));
                         stockCountdown(apiResponse.stock);
                         if (apiResponse.stock.variantCheck && apiResponse.stock.variantCheck == 1 && apiResponse.stock.variantsData !== null && apiResponse.stock.variantsData.length > 1) {
-                            enableStockForVariants(apiResponse.stock.variantsData, apiResponse.stock.variantHeading);
+                            enableStockForVariants(apiResponse.stock.variantsData, apiResponse.stock.variantHeading, apiResponse.stock);
                         }
                     }
                 } else {
+                    console.log("in the else statement")
                     $jq321("head").append($jq321("<link/>", {
                         rel: "stylesheet",
                         href: serverUrl.cssStock + "?v" + version
                     }));
                     stockCountdown(apiResponse.stock);
                     if (apiResponse.stock.variantCheck && apiResponse.stock.variantCheck == 1 && apiResponse.stock.variantsData !== null && apiResponse.stock.variantsData.length > 1) {
-                        enableStockForVariants(apiResponse.stock.variantsData, apiResponse.stock.variantHeading);
+                        enableStockForVariants(apiResponse.stock.variantsData, apiResponse.stock.variantHeading, apiResponse.stock);
                     }
                 }
+                // $jq321("head").append($jq321("<link/>", {
+                //     rel: "stylesheet",
+                //     href: serverUrl.cssStock + "?v" + version
+                // }));
+                // stockCountdown(apiResponse.stock);
+                // if (apiResponse.stock.variantCheck && apiResponse.stock.variantCheck == 1 && apiResponse.stock.variantsData !== null && apiResponse.stock.variantsData.length > 1) {
+                //     enableStockForVariants(apiResponse.stock.variantsData, apiResponse.stock.variantHeading, apiResponse.stock);
+                // }
              }
         }
               
@@ -1810,12 +1820,45 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         }
     }
 
-    function stockForSelectedVariant(string, data) {
+    function stockForSelectedVariant(string, data, stockSettings) {
+        let stockRestrictionSettings = JSON.parse(stockSettings.stock_restriction_settings);
         if (string !== "") {
             $jq321.each(data, function (key, value) {
                 if (value.title == string) {
                     let stockCountSpan = $jq321("#carecart-salespop-sc-number");
                     if (stockCountSpan.length > 0) {
+                        // if (stockRestrictionSettings.stock_restriction_check !== undefined && stockRestrictionSettings.stock_restriction_check == "on") {
+                        //     if (value.inventory_quantity > stockRestrictionSettings.stock_restriction_value) {
+                        //         $jq321(".cc-sp-sc-stock-div").hide();
+                        //     } else {
+                        //         $jq321(".cc-sp-sc-stock-div").show();
+                        //     }
+                        // } else {
+                        //     $jq321(".cc-sp-sc-stock-div").show();
+                        // }
+                        if (stockSettings.soldOutSettings !== undefined && value.inventory_quantity < 1) {
+                            $jq321(".cc-sp-sc-sold-div").show();
+                        } else {
+                            $jq321(".cc-sp-sc-sold-div").hide();
+                        }
+                        
+                        //Stock restrictions settings
+                        if (stockRestrictionSettings.stock_restriction_check !== undefined && stockRestrictionSettings.stock_restriction_check == "on") {
+                            if (value.inventory_quantity > stockRestrictionSettings.stock_restriction_value || value.inventory_quantity < 1) { 
+                                $jq321(".cc-sp-sc-stock-div").hide();
+                            }
+                            else { 
+                                $jq321(".cc-sp-sc-stock-div").show();
+                            }
+                        }
+                        else {
+                            //Sold out message
+                            if (stockSettings.soldOutSettings !== undefined && value.inventory_quantity < 1) {
+                                $jq321(".cc-sp-sc-stock-div").hide();
+                            } else {
+                                $jq321(".cc-sp-sc-stock-div").show();
+                            }
+                        }
                         $jq321(stockCountSpan).html(value.inventory_quantity);
                         let stockPercentage = Math.round((parseInt(value.inventory_quantity) / 100) * 100);
                         stockPercentage = stockPercentage + "%";
@@ -1863,7 +1906,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
      }
 
-    function enableStockForVariants(variantsData, variantHeading) {
+     function enableStockForVariants(variantsData, variantHeading, stockSettings) {
 
         $jq321(document).ready(function () { 
 
@@ -1884,7 +1927,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                     let selectedVariantsValuesString = '';
                     $jq321.each(getSelectors.selector_value, function (key, value) {
                         
-                        attachEventOnOptions(value, variantsData);
+                        attachEventOnOptions(value, variantsData, stockSettings);
                         var val = this.checked ? true : false;
                         if (val) {
                             selectedVariantsValuesString = selectedVariantsValuesString+ $jq321(value).val() + " / ";
@@ -1893,37 +1936,38 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                     selectedVariantsValuesString = selectedVariantsValuesString.trim();
                     selectedVariantsValuesString = selectedVariantsValuesString.slice(0, -1);
                     selectedVariantsValuesString = selectedVariantsValuesString.trim();
-                    stockForSelectedVariant(selectedVariantsValuesString, variantsData);
+                    stockForSelectedVariant(selectedVariantsValuesString, variantsData, stockSettings);
                 } else if (getSelectors.selector_number == 1) {
 
                     let selectedVariantsValuesString = '';
                     for (let i = 0; i <= availableOptions; i++) {
-                        attachEventOnOptions(getSelectors.selector_value[i], variantsData);
+                        attachEventOnOptions(getSelectors.selector_value[i], variantsData, stockSettings);
                         selectedVariantsValuesString = selectedVariantsValuesString + $jq321(getSelectors.selector_value[i]).find(":selected").val() + " / ";
                     }
 
                     selectedVariantsValuesString = selectedVariantsValuesString.trim();
                     selectedVariantsValuesString = selectedVariantsValuesString.slice(0, -1);
                     selectedVariantsValuesString = selectedVariantsValuesString.trim();
-                    stockForSelectedVariant(selectedVariantsValuesString, variantsData);
+                    stockForSelectedVariant(selectedVariantsValuesString, variantsData, stockSettings);
                 } else if (getSelectors.selector_number == 3) {
                     let selectedVariantsValuesString = '';
                     for (let i = 0; i <= availableOptions; i++) {
-                        attachEventOnOptions(getSelectors.selector_value[i], variantsData);
+                        attachEventOnOptions(getSelectors.selector_value[i], variantsData, stockSettings);
                         selectedVariantsValuesString = selectedVariantsValuesString + $jq321(getSelectors.selector_value[i]).find(":selected").val() + " / ";
                     }
                     selectedVariantsValuesString = selectedVariantsValuesString.trim();
                     selectedVariantsValuesString = selectedVariantsValuesString.slice(0, -1);
                     selectedVariantsValuesString = selectedVariantsValuesString.trim();
-                    stockForSelectedVariant(selectedVariantsValuesString, variantsData);
+                    stockForSelectedVariant(selectedVariantsValuesString, variantsData, stockSettings);
                 }
             }
             /** Make the final selectors **/
         });
     }
 
-    function attachEventOnOptions(variantSelector, variantsData)
+    function attachEventOnOptions(variantSelector, variantsData, stockSettings)
     {
+        let stockRestrictionSettings = JSON.parse(stockSettings.stock_restriction_settings);
         console.log("SP: variant selector found");
         $jq321(variantSelector).on("change", function () { 
             setTimeout(function () {
@@ -1935,6 +1979,31 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                         if (value.id == variantID) {
                             let stockCountSpan = $jq321("#carecart-salespop-sc-number");
                             if (stockCountSpan.length > 0) {
+                                //Sold out message
+                                if (stockSettings.soldOutSettings !== undefined && value.inventory_quantity < 1) {
+                                    $jq321(".cc-sp-sc-sold-div").show();
+                                } else {
+                                    $jq321(".cc-sp-sc-sold-div").hide();
+                                }
+                                
+                                //Stock restrictions settings
+                                if (stockRestrictionSettings.stock_restriction_check !== undefined && stockRestrictionSettings.stock_restriction_check == "on") {
+                                    if (value.inventory_quantity > stockRestrictionSettings.stock_restriction_value || value.inventory_quantity < 1) { 
+                                        $jq321(".cc-sp-sc-stock-div").hide();
+                                    }
+                                    else { 
+                                        $jq321(".cc-sp-sc-stock-div").show();
+                                    }
+                                }
+                                else {
+                                    //Sold out message
+                                    if (stockSettings.soldOutSettings !== undefined && value.inventory_quantity < 1) {
+                                        $jq321(".cc-sp-sc-stock-div").hide();
+                                    } else {
+                                        $jq321(".cc-sp-sc-stock-div").show();
+                                    }
+                                }
+
                                 $jq321(stockCountSpan).html(value.inventory_quantity);
                                 let stockPercentage = Math.round((parseInt(value.inventory_quantity) / 100) * 100);
                                 stockPercentage = stockPercentage + "%";
@@ -1949,7 +2018,6 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     /** Stock for variants ends **/
 
     function stockCountdown(responseStock) {
-
         var selectorStock1 = $jq321("form[action='/cart/add']").find("button[type='submit'],input[type='submit']").parent();
         var selectorStock2 = $jq321("form[action='/cart/add']");
         var selectorStock3 = $jq321("form[action='/cart/add']:first").find("button[type='submit'],input[type='submit']").parent();
@@ -1960,31 +2028,77 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         if (responseStock.above_cart == 1) {
             if (selectorStock1.length == 1) {
                 selectorStock1.prepend(responseStock.view);
+                if (responseStock.soldOutSettings !== undefined && responseStock.soldOutProduct === undefined) {
+                    selectorStock1.prepend(responseStock.soldView);
+                }
             } else if (selectorStock2.length == 1) {
                 selectorStock2.prepend(responseStock.view);
+                if (responseStock.soldOutSettings !== undefined && responseStock.soldOutProduct === undefined) {
+                    selectorStock2.prepend(responseStock.soldView);
+                }
             } else if (selectorStock3.length == 1) {
                 $jq321(responseStock.view).insertBefore(selectorStock3);
+                if (responseStock.soldOutSettings !== undefined && responseStock.soldOutProduct === undefined) {
+                    $jq321(responseStock.soldView).insertBefore(selectorStock3);
+                }
             } else if (selectorStock4.length == 1) {
                 selectorStock4.prepend(responseStock.view);
+                if (responseStock.soldOutSettings !== undefined && responseStock.soldOutProduct === undefined) {
+                    selectorStock4.prepend(responseStock.soldView);
+                }
             } else if (selectorStock5.length == 1) {
                 $jq321(responseStock.view).insertBefore(selectorStock5);
+                if (responseStock.soldOutSettings !== undefined && responseStock.soldOutProduct === undefined) {
+                    $jq321(responseStock.soldView).insertBefore(selectorStock5);
+                }
             } else if (selectorStock6.length == 1) {
                 selectorStock6.prepend(responseStock.view);
+                if (responseStock.soldOutSettings !== undefined && responseStock.soldOutProduct === undefined) {
+                    selectorStock6.prepend(responseStock.soldView);
+                }
             }
         } else {
             if (selectorStock1.length == 1) {
                 selectorStock1.append(responseStock.view);
+                if (responseStock.soldOutSettings !== undefined && responseStock.soldOutProduct === undefined) {
+                    selectorStock1.append(responseStock.soldView);
+                }
             } else if (selectorStock2.length == 1) {
                 selectorStock2.append(responseStock.view);
+                if (responseStock.soldOutSettings !== undefined && responseStock.soldOutProduct === undefined) {
+                    selectorStock2.append(responseStock.soldView);
+                }
             } else if (selectorStock3.length == 1) {
                 $jq321(responseStock.view).insertAfter(selectorStock3);
+                if (responseStock.soldOutSettings !== undefined && responseStock.soldOutProduct === undefined) {
+                    $jq321(responseStock.soldView).insertAfter(selectorStock3);
+                }
             } else if (selectorStock4.length == 1) {
                 selectorStock4.append(responseStock.view);
+                if (responseStock.soldOutSettings !== undefined && responseStock.soldOutProduct === undefined) {
+                    selectorStock4.append(responseStock.soldView);
+                }
             } else if (selectorStock5.length == 1) {
                 $jq321(responseStock.view).insertAfter(selectorStock5);
+                if (responseStock.soldOutSettings !== undefined && responseStock.soldOutProduct === undefined) {
+                    $jq321(responseStock.soldView).insertAfter(selectorStock5);
+                }
             } else if (selectorStock6.length == 1) {
                 selectorStock6.append(responseStock.view);
+                if (responseStock.soldOutSettings !== undefined && responseStock.soldOutProduct === undefined) {
+                    selectorStock6.append(responseStock.soldView);
+                }
             }
+        }
+
+        if (responseStock.variantCheck == 0 && responseStock.soldOutProduct == 1) {
+            $jq321(".cc-sp-sc-sold-div").show();
+        } else if (responseStock.variantCheck == 0 && responseStock.soldOutProduct === undefined) {
+            $jq321(".cc-sp-sc-stock-div").show();
+        } else if (responseStock.variantCheck == 1 && responseStock.soldOutProduct === undefined) {
+            $jq321(".cc-sp-sc-stock-div").show();
+        } else if (responseStock.variantCheck == 1 && responseStock.soldOutProduct == 1) { 
+            $jq321(".cc-sp-sc-sold-div").show();
         }
     }
 
@@ -2588,11 +2702,9 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         if (product_id == '') {
             if (allLinks.length != 0) {
                 for (var u = 0; u < allLinks.length; u++) {
-                    console.log(u);
                     if (checkValue(allLinks[u], responseTimerCollection) == 'Not exist') {
                         var selectorTimeView = $jq321("[href='" + allLinks[u] + "']");
                         selectorTimeView = selectorTimeView[0];
-                        console.log(selectorTimeView);
                         $jq321(responseTimer.view).insertBefore(selectorTimeView);
                     }
                 }
