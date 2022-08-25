@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 4.0.0
+ * @version 4.1.0
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -42,7 +42,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
     scriptInjection("https://cdnjs.cloudflare.com/ajax/libs/Swiper/5.4.5/js/swiper.min.js");
 
-    var version = "4.0.0";
+    var version = "4.1.0";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -676,7 +676,9 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                 "cssQuick": "https://sales-pop.carecart.io/lib/quick-box.css",
                 "cssTrustBadges": "https://sales-pop.carecart.io/lib/badges-box.css",
                 "cssAnnouncement": "https://sales-pop.carecart.io/lib/announcement.css",
-                "legacyCss": "https://sales-pop.carecart.io/lib/salesnotifier.css"
+                "legacyCss": "https://sales-pop.carecart.io/lib/salesnotifier.css",
+                "cssShareCart": "https://" + tempAnchorTag.hostname + "/lib/sales-pop-share-cart.css",
+                "cssStickyCart": "https://" + tempAnchorTag.hostname + "/lib/sales-pop-sticky-cart.css"
             };
         }
 
@@ -713,7 +715,9 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             "cssQuick": "https://" + tempAnchorTag.hostname + "/lib/quick-box.css?v" + version,
             "cssTrustBadges": "https://" + tempAnchorTag.hostname + "/lib/badges-box.css?v" + version,
             "cssAnnouncement": "https://" + tempAnchorTag.hostname + "/lib/announcement.css?v" + version,
-            "legacyCss": "https://" + tempAnchorTag.hostname + "/lib/salesnotifier.css"
+            "legacyCss": "https://" + tempAnchorTag.hostname + "/lib/salesnotifier.css",
+            "cssShareCart": "https://" + tempAnchorTag.hostname + "/lib/sales-pop-share-cart.css?v" + version,
+            "cssStickyCart": "https://" + tempAnchorTag.hostname + "/lib/sales-pop-sticky-cart.css?v=" + version
         };
     }
 
@@ -1338,12 +1342,20 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         }
         //share cart
         if (apiResponse && apiResponse.shareCart && apiResponse.shareCart !== false) {
-            shareCart(apiResponse.shareCart);   
+            shareCart(apiResponse.shareCart);
+            $jq321("head").append($jq321("<link/>", {
+                rel: "stylesheet",
+                href: serverUrl.cssShareCart + "?v" + version
+            }));
         }
 
         //STICKY CART CALL
         if (apiResponse && apiResponse.sticky && apiResponse.sticky !== false) {
             stickyCart(apiResponse.sticky);
+            $jq321("head").append($jq321("<link/>", {
+                rel: "stylesheet",
+                href: serverUrl.cssStickyCart
+            }));
         }
 
         if (shouldStatsBeShown()) {
@@ -2341,7 +2353,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             href: serverUrl.cssStock
         }));
 
-        var selectorStockView = $jq321(".quickshop-footer");
+        var selectorStockView = $jq321(".quickshop-45");
 
         if (responseStock.above_cart == 1) {
             if (selectorStockView.length == 1) {
