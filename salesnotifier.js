@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 3.1.3
+ * @version 4.0.0
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -42,7 +42,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
     scriptInjection("https://cdnjs.cloudflare.com/ajax/libs/Swiper/5.4.5/js/swiper.min.js");
 
-    var version = "3.1.3";
+    var version = "4.0.0";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -696,8 +696,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         else if ("dev-sales-pop.carecart.io" === tempAnchorTag.hostname) {
             backend = "https://dev-tracking-sales-pop.carecart.io/index.php/FrontController/";
         }
-        else if("odd-earwig-64.telebit.io" === tempAnchorTag.hostname)
-        {
+        else if ("odd-earwig-64.telebit.io" === tempAnchorTag.hostname) {
             backend = "http://localhost:8500/index.php/FrontController/";
         }
         else if ("helpless-insect-91.telebit.io" === tempAnchorTag.hostname) {
@@ -1189,12 +1188,10 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
         // STOCK COUNTDOWN CALL
         if (apiResponse && apiResponse.stock && apiResponse.stock !== null) {
-            if (apiResponse.stock.on_off == 1)
-            {
+            if (apiResponse.stock.on_off == 1) {
                 if (apiResponse.stock.stock_restriction_settings !== null && apiResponse.stock.variantCheck == 0) {
-                    console.log("in the if statement")
                     let stock_restriction_setting = JSON.parse(apiResponse.stock.stock_restriction_settings);
-                    if(stock_restriction_setting.stock_restriction_check == "on" && parseInt(stock_restriction_setting.stock_restriction_value) !== parseInt(apiResponse.stock.left_stock) && parseInt(apiResponse.stock.left_stock) > parseInt(stock_restriction_setting.stock_restriction_value)){
+                    if (stock_restriction_setting.stock_restriction_check == "on" && parseInt(stock_restriction_setting.stock_restriction_value) !== parseInt(apiResponse.stock.left_stock) && parseInt(apiResponse.stock.left_stock) > parseInt(stock_restriction_setting.stock_restriction_value)) {
                         console.log("SP: Stock restricted to display");
                     } else {
                         $jq321("head").append($jq321("<link/>", {
@@ -1207,7 +1204,6 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                         }
                     }
                 } else {
-                    console.log("in the else statement")
                     $jq321("head").append($jq321("<link/>", {
                         rel: "stylesheet",
                         href: serverUrl.cssStock + "?v" + version
@@ -1217,24 +1213,11 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                         enableStockForVariants(apiResponse.stock.variantsData, apiResponse.stock.variantHeading, apiResponse.stock);
                     }
                 }
-                // $jq321("head").append($jq321("<link/>", {
-                //     rel: "stylesheet",
-                //     href: serverUrl.cssStock + "?v" + version
-                // }));
-                // stockCountdown(apiResponse.stock);
-                // if (apiResponse.stock.variantCheck && apiResponse.stock.variantCheck == 1 && apiResponse.stock.variantsData !== null && apiResponse.stock.variantsData.length > 1) {
-                //     enableStockForVariants(apiResponse.stock.variantsData, apiResponse.stock.variantHeading, apiResponse.stock);
-                // }
-             }
+            }
         }
-              
+
         // Time COUNTDOWN CALL
         if (apiResponse && apiResponse.timer && apiResponse.timer !== null) {
-            /*$jq321("head").append($jq321("<link/>", {
-                    rel: "stylesheet",
-                    href: serverUrl.cssTimer + "?v" + version
-                }));*/
-            //timeCountdown(apiResponse.timer);
 
             setTimeout(function () {
                 $jq321("head").append($jq321("<link/>", {
@@ -1253,7 +1236,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                 href: serverUrl.cssVisitor + "?v" + version
             }));
 
-            if(apiResponse.visitor.start_visitor_counter !=null && apiResponse.visitor.end_visitor_counter !=null ){
+            if (apiResponse.visitor.start_visitor_counter != null && apiResponse.visitor.end_visitor_counter != null) {
 
                 customVisitors(apiResponse.visitor.start_visitor_counter, apiResponse.visitor.end_visitor_counter);
             }
@@ -1312,58 +1295,57 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         }
 
         // ANNOUNCEMENT BAR CALL
-        if (apiResponse && apiResponse.announcementBar && apiResponse.announcementBar != false) 
-        {
-            if ( ! isHideAnnouncementCookieSet())
-            {
+        if (apiResponse && apiResponse.announcementBar && apiResponse.announcementBar != false) {
+            if (!isHideAnnouncementCookieSet()) {
                 var $allowed = 0;
                 var currentPageHandle = window.location.pathname.split("/");
 
-                if (apiResponse.announcementBar.pages_type == 2)
-                {
-                    if (($jq321.inArray("products", currentPageHandle) != -1) && (apiResponse.announcementBar.product_page == 1)) 
-                    {
+                if (apiResponse.announcementBar.pages_type == 2) {
+                    if (($jq321.inArray("products", currentPageHandle) != -1) && (apiResponse.announcementBar.product_page == 1)) {
                         console.log('product page');
                         $allowed = 1;
                     }
-                    else if (($jq321.inArray("collections", currentPageHandle) != -1) && (apiResponse.announcementBar.collection_page == 1)) 
-                    {
+                    else if (($jq321.inArray("collections", currentPageHandle) != -1) && (apiResponse.announcementBar.collection_page == 1)) {
                         console.log('collection page');
                         $allowed = 1;
                     }
-                    else if (($jq321.inArray("cart", currentPageHandle) != -1) && (apiResponse.announcementBar.cart_page == 1)) 
-                    {
+                    else if (($jq321.inArray("cart", currentPageHandle) != -1) && (apiResponse.announcementBar.cart_page == 1)) {
                         console.log('cart page');
                         $allowed = 1;
                     }
-                    else if((currentPageHandle[1].length == 0) && (apiResponse.announcementBar.home_page == 1)) 
-                    {
+                    else if ((currentPageHandle[1].length == 0) && (apiResponse.announcementBar.home_page == 1)) {
                         console.log("home page");
                         $allowed = 1;
                     }
-                    else
-                    {
+                    else {
                         console.log('undefine page');
                         $allowed = 0;
                     }
                 }
-                else if(apiResponse.announcementBar.pages_type == 1)
-                {
+                else if (apiResponse.announcementBar.pages_type == 1) {
                     $allowed = 1;
                 }
 
-                if ($allowed == 1)
-                {
+                if ($allowed == 1) {
                     $jq321("head").append($jq321("<link/>", {
                         rel: "stylesheet",
                         href: serverUrl.cssAnnouncement + "?v" + version
                     }));
-        
+
                     setTimeout(function () { announcementBar(apiResponse.announcementBar); }, 2000);
                 }
             }
         }
-       
+        //share cart
+        if (apiResponse && apiResponse.shareCart && apiResponse.shareCart !== false) {
+            shareCart(apiResponse.shareCart);   
+        }
+
+        //STICKY CART CALL
+        if (apiResponse && apiResponse.sticky && apiResponse.sticky !== false) {
+            stickyCart(apiResponse.sticky);
+        }
+
         if (shouldStatsBeShown()) {
             printConfigForNerds();
         }
@@ -1524,10 +1506,10 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         let minuteAgo = " minute(s) ago";
         let hourAgo = " hour(s) ago";
         let daysAgo = " day(s) ago";
-        if (apiResponse.timeAgoTranslatedData) { 
-            minuteAgo = (apiResponse.timeAgoTranslatedData.minutes_ago !== "") ? " " +apiResponse.timeAgoTranslatedData.minutes_ago : minuteAgo;
-            hourAgo = (apiResponse.timeAgoTranslatedData.hours_ago !== "") ? " " +apiResponse.timeAgoTranslatedData.hours_ago : hourAgo;
-            daysAgo = (apiResponse.timeAgoTranslatedData.days_ago !== "") ?  " " + apiResponse.timeAgoTranslatedData.days_ago : daysAgo;
+        if (apiResponse.timeAgoTranslatedData) {
+            minuteAgo = (apiResponse.timeAgoTranslatedData.minutes_ago !== "") ? " " + apiResponse.timeAgoTranslatedData.minutes_ago : minuteAgo;
+            hourAgo = (apiResponse.timeAgoTranslatedData.hours_ago !== "") ? " " + apiResponse.timeAgoTranslatedData.hours_ago : hourAgo;
+            daysAgo = (apiResponse.timeAgoTranslatedData.days_ago !== "") ? " " + apiResponse.timeAgoTranslatedData.days_ago : daysAgo;
         }
 
         if (timeDifference >= 60) {
@@ -1793,7 +1775,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
     /** Stock for variants **/
     function makeSelectors(variantHeading) {
-        
+
         let formSelector;
         let allForms = $jq321("form[action]");
         $jq321.each(allForms, function (key, value) {
@@ -1841,13 +1823,13 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                         } else {
                             $jq321(".cc-sp-sc-sold-div").hide();
                         }
-                        
+
                         //Stock restrictions settings
                         if (stockRestrictionSettings.stock_restriction_check !== undefined && stockRestrictionSettings.stock_restriction_check == "on") {
-                            if (value.inventory_quantity > stockRestrictionSettings.stock_restriction_value || value.inventory_quantity < 1) { 
+                            if (value.inventory_quantity > stockRestrictionSettings.stock_restriction_value || value.inventory_quantity < 1) {
                                 $jq321(".cc-sp-sc-stock-div").hide();
                             }
-                            else { 
+                            else {
                                 $jq321(".cc-sp-sc-stock-div").show();
                             }
                         }
@@ -1864,51 +1846,50 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                         stockPercentage = stockPercentage + "%";
                         $jq321(".stock-progress-foreground").width(stockPercentage);
                         console.log("SP: Stock for selected variant");
+                    }
                 }
-            }
-       });
-    }
+            });
+        }
     }
 
     // CUSTOM VISITOR COUNTER
 
-    function customVisitors(start_limit_number, end_limit_number ){
-        
-        let randomNumber = Math.floor(Math.random() * (end_limit_number - start_limit_number + 1) + parseInt(start_limit_number) );
+    function customVisitors(start_limit_number, end_limit_number) {
 
-       setInterval(changeRandomNumber,3000);
+        let randomNumber = Math.floor(Math.random() * (end_limit_number - start_limit_number + 1) + parseInt(start_limit_number));
 
-       function changeRandomNumber(){
+        setInterval(changeRandomNumber, 3000);
 
-            if(Math.floor((Math.random() * 2))){
+        function changeRandomNumber() {
+
+            if (Math.floor((Math.random() * 2))) {
 
                 randomNumberTen = Math.floor((Math.random() * 10) + 1);
-                randomNumber = parseInt(randomNumber) +  parseInt(randomNumberTen);
-             
-                if (randomNumber > end_limit_number){
+                randomNumber = parseInt(randomNumber) + parseInt(randomNumberTen);
+
+                if (randomNumber > end_limit_number) {
                     randomNumber = end_limit_number;
                 }
-    
+
             }
-    
-            else{
-    
-            randomNumberTen = Math.floor((Math.random() * 10) + 1);
-            randomNumber = parseInt(randomNumber) - parseInt(randomNumberTen);;
-    
-                if (randomNumber < start_limit_number){
+
+            else {
+
+                randomNumberTen = Math.floor((Math.random() * 10) + 1);
+                randomNumber = parseInt(randomNumber) - parseInt(randomNumberTen);;
+
+                if (randomNumber < start_limit_number) {
                     randomNumber = start_limit_number;
                 }
             }
-             
-        $jq321("#carecart-salespop-visitor-number").html(randomNumber);
-       }
 
-     }
+            $jq321("#carecart-salespop-visitor-number").html(randomNumber);
+        }
 
-     function enableStockForVariants(variantsData, variantHeading, stockSettings) {
+    }
 
-        $jq321(document).ready(function () { 
+    function enableStockForVariants(variantsData, variantHeading, stockSettings) {
+        $jq321(document).ready(function () {
 
             let getSelectors = makeSelectors(variantHeading);
             if (getSelectors != false) {
@@ -1921,16 +1902,16 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                     availableOptions = 2;
                 }
                 /** Let's define options here **/
-                
+
                 /** Make the final selectors **/
                 if (getSelectors.selector_number == 2) {
                     let selectedVariantsValuesString = '';
                     $jq321.each(getSelectors.selector_value, function (key, value) {
-                        
+
                         attachEventOnOptions(value, variantsData, stockSettings);
                         var val = this.checked ? true : false;
                         if (val) {
-                            selectedVariantsValuesString = selectedVariantsValuesString+ $jq321(value).val() + " / ";
+                            selectedVariantsValuesString = selectedVariantsValuesString + $jq321(value).val() + " / ";
                         }
                     });
                     selectedVariantsValuesString = selectedVariantsValuesString.trim();
@@ -1965,11 +1946,10 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         });
     }
 
-    function attachEventOnOptions(variantSelector, variantsData, stockSettings)
-    {
+    function attachEventOnOptions(variantSelector, variantsData, stockSettings) {
         let stockRestrictionSettings = JSON.parse(stockSettings.stock_restriction_settings);
         console.log("SP: variant selector found");
-        $jq321(variantSelector).on("change", function () { 
+        $jq321(variantSelector).on("change", function () {
             setTimeout(function () {
 
                 let urlParams = new URLSearchParams(window.location.search);
@@ -1985,13 +1965,13 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                                 } else {
                                     $jq321(".cc-sp-sc-sold-div").hide();
                                 }
-                                
+
                                 //Stock restrictions settings
                                 if (stockRestrictionSettings.stock_restriction_check !== undefined && stockRestrictionSettings.stock_restriction_check == "on") {
-                                    if (value.inventory_quantity > stockRestrictionSettings.stock_restriction_value || value.inventory_quantity < 1) { 
+                                    if (value.inventory_quantity > stockRestrictionSettings.stock_restriction_value || value.inventory_quantity < 1) {
                                         $jq321(".cc-sp-sc-stock-div").hide();
                                     }
-                                    else { 
+                                    else {
                                         $jq321(".cc-sp-sc-stock-div").show();
                                     }
                                 }
@@ -2008,12 +1988,12 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                                 let stockPercentage = Math.round((parseInt(value.inventory_quantity) / 100) * 100);
                                 stockPercentage = stockPercentage + "%";
                                 $jq321(".stock-progress-foreground").width(stockPercentage);
+                            }
                         }
-                    }
-               });
-            }
+                    });
+                }
             }, 1000);
-            }); 
+        });
     }
     /** Stock for variants ends **/
 
@@ -2097,7 +2077,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             $jq321(".cc-sp-sc-stock-div").show();
         } else if (responseStock.variantCheck == 1 && responseStock.soldOutProduct === undefined) {
             $jq321(".cc-sp-sc-stock-div").show();
-        } else if (responseStock.variantCheck == 1 && responseStock.soldOutProduct == 1) { 
+        } else if (responseStock.variantCheck == 1 && responseStock.soldOutProduct == 1) {
             $jq321(".cc-sp-sc-sold-div").show();
         }
     }
@@ -2196,7 +2176,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         }
 
         var deadline = responseTimer.time;
-        
+
         //initializeClock('clockdivpreview', deadline);
         initializeClock('clockdivpreviewSales', deadline);
     }
@@ -2420,7 +2400,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                     var url = href.split("/");
                     if ($jq321.inArray("products", url) != -1) {
                         allLinks.push(href);
-                    }   
+                    }
                 }
             });
         }
@@ -2479,6 +2459,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         });
     }
 
+
     // PRODUCT QUICK VIEW COLLECTION CALL
     $jq321("body").on('click', '.collection-quick-view', function (e) {
         e.preventDefault();
@@ -2519,6 +2500,9 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             });
         }
     });
+
+
+
     // ---------------------------------- </PRODUCT QUICK VIEW FOR COLLECTION PAGE> --------------------------------
 
     // ---------------------------------- <TRUST BADGES MODULE> --------------------------------
@@ -2598,8 +2582,8 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     };
     // ---------------------------------- </PAYMENT PLAN> --------------------------------
 
-      // ---------------------------------- <TIMER FOR COLLECTION PAGE> --------------------------
-// ******************************************************************************************
+    // ---------------------------------- <TIMER FOR COLLECTION PAGE> --------------------------
+    // ******************************************************************************************
     function getTimeRemainingForCollection(endtime) {
         var now = new Date;
         var utc_timestamp = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),
@@ -2661,7 +2645,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             $jq321("a").each(function () {
                 var href = $jq321(this).attr('href');
                 var url = href.split("/");
-                    if (($jq321.inArray("products", url) != -1)) {
+                if (($jq321.inArray("products", url) != -1)) {
                     if ($jq321.inArray(href, allLinks) == -1) {
                         allLinks.push(href);
                     }
@@ -2688,7 +2672,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
         function checkValue(value, arr) {
             var status = 'Not exist';
-            if(arr === null) return status;
+            if (arr === null) return status;
             for (var i = 0; i < arr.length; i++) {
                 var name = arr[i];
                 if (name == value) {
@@ -2735,17 +2719,14 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     // ---------------------------------- </TIMER FOR COLLECTION PAGE> --------------------------------
 
     // ---------------------------------- <ANNOUNCEMENT BAR MODULE> --------------------------------
-	function announcementBar(announcementBarResponse)
-	{
+    function announcementBar(announcementBarResponse) {
         var selectorAnnouncementBar = $jq321("body");
         var placement = announcementBarResponse.placement;
-        
-        if (placement == 'top')
-        {
+
+        if (placement == 'top') {
             selectorAnnouncementBar.prepend(announcementBarResponse.view);
         }
-        else if(placement == 'bottom')
-        {
+        else if (placement == 'bottom') {
             selectorAnnouncementBar.append(announcementBarResponse.view);
         }
 
@@ -2753,9 +2734,9 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         if (announcementBarResponse.free_ship_settings !== null) {
             doCalculationForShipping(announcementBarResponse.free_ship_settings);
             addCartInterval(announcementBarResponse.free_ship_settings);
-        }	
-	}
-    
+        }
+    }
+
     $jq321("body").on('click', '#ccannouncement-close', function (e) {
         e.preventDefault();
 
@@ -2763,24 +2744,24 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         setCookie("sp-hide-announcement", 1, 15);  // 15 minutes (UTC)
     });
 
-    function isHideAnnouncementCookieSet() 
-    {
+    function isHideAnnouncementCookieSet() {
         var cookie = getCookie("sp-hide-announcement");
         return (typeof cookie == "null" || typeof cookie == "undefined" || cookie === "") ? false : true;
     }
 
-    function addCartInterval(settings) { 
+    function addCartInterval(settings) {
         setInterval(function () {
-        doCalculationForShipping(settings);
+            doCalculationForShipping(settings);
+            // fetchCartItems();
         }, 2000);
     }
 
-    function doCalculationForShipping(settings)
-    {
-        var cartContents = fetch('/cart.json', {method: 'GET'})
+    function doCalculationForShipping(settings) {
+        var cartContents = fetch('/cart.json', { method: 'GET' })
             .then(response => response.json())
             .then(data => {
                 let cartValue = data.items;
+                // fetchCartItems(cartValue);
                 if (cartValue.length == 0) {
                     console.log("SP: Cart is empty");
                     let initialMessage = settings.initial_message;
@@ -2793,7 +2774,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                     cartPrice = Math.floor(cartPrice / 1e2);
                     let actualGoal = parseInt(settings.goal_value);
                     if (cartPrice >= actualGoal) {
-                    $jq321(".getDiscoundText").html(settings.goal_message);
+                        $jq321(".getDiscoundText").html(settings.goal_message);
                     } else if (cartPrice < actualGoal) {
                         let remainingAmount = actualGoal - cartPrice;
                         let progressMessage = settings.progress_message;
@@ -2804,6 +2785,170 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             });
     }
     // ---------------------------------- </ANNOUNCEMENT BAR MODULE> --------------------------------
+
+    // ---------------------------------- <SHARE CART MODULE> --------------------------------
+    function shareCart(response) {
+        let cartPage = !(!window.location.pathname.match("(.*)/cart/(.*)") && !window.location.pathname.match("(.*)/cart"));
+        if (cartPage) {
+            let firstSelector = $jq321("form[action='/cart']").parent();
+            if (firstSelector.length > 0) {
+                var cartContents = fetch('/cart.json', { method: 'GET' })
+                    .then(response => response.json())
+                    .then(data => {
+                        let copyLink = "https://" + Shopify.shop + "/cart/";
+                        let cartItems = data.items;
+                        if (cartItems.length > 0) {
+                            $jq321(firstSelector[1]).append(response.iconsFile);
+                            for (const items of cartItems) {
+                                copyLink = copyLink + items.variant_id + ":" + items.quantity + ",";
+                            }
+                            $jq321("#cc-sp-share-cart-copy-link-icon").attr("copy-link", copyLink);
+                            //Copy icon
+                            $jq321("#cc-sp-share-cart-copy-link-icon").on("click", function () {
+                                $jq321("#cc-sp-share-cart-copied-message-text").show();
+                                navigator.clipboard.writeText($jq321(this).attr("copy-link"));
+                                setTimeout(function () {
+                                    $jq321("#cc-sp-share-cart-copied-message-text").hide();
+                                }, 3000);
+                            });
+                            //mail icon
+                            $jq321("#cc-sp-share-cart-mail-icon-anchor").attr("href", "mailto:muhammad.farooq@vaivaltech.com?subject=Checkout%20my%20cart&body=" + copyLink);
+                            $jq321("#cc-sp-share-cart-mail-icon").on("click", function () {
+                                window.location.href = "mailto:?subject=Checkout%20my%20cart&body=" + copyLink;
+                            });
+                        }
+                    });
+            }
+        }
+    }
+    // ---------------------------------- </SHARE CART MODULE> --------------------------------
+
+    // ---------------------------------- < STICKY CART MODULE> --------------------------------
+    function cartUpdateCall(itemID, quantity) {
+        let formData = {
+            'id': itemID,
+            'quantity': quantity
+        };
+        fetch('/cart/change.js', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        }).then(response => {
+        }).catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+
+
+    function fetchItemsForStickyCart() {
+
+        fetch('/cart.json', { method: 'GET' })
+            .then(response => response.json())
+            .then(data => {
+                let cartItems = data.items;
+                if (cartItems.length == 0) {
+                    $jq321(".cc-inner-content").remove();
+                    $jq321("#cc-sp-share-cart-empty-cart-text").show();
+                    $jq321("#cc-sp-share-cart-copy-link-icon").attr("copy-link", "#")
+                } else {
+                    let copyLink = "https://" + Shopify.shop + "/cart/";
+                    let totalprice = 0;
+                    $jq321("#cc-sp-share-cart-empty-cart-text").hide();
+                    let totalItemsCount = 0;
+                    $jq321(".cc-inner-content").remove();
+                    for (const items of cartItems) {
+                        totalItemsCount = parseInt(totalItemsCount) + parseInt(items.quantity);
+                        copyLink = copyLink + items.variant_id + ":" + items.quantity + ",";
+                        let variantTitle = items.variant_title == null ? "" : '<p class="sp-variant">' + items.variant_title + '</p>';
+                        $jq321(
+                            `<div class="cc-inner-content sp-border">
+                    <div class="img-div">
+                        <img src="${items.image}" class="img-fluid rounded-start" width="50" height="50" alt="...">
+                    </div>
+                    <div class="card-body p-0 pt-2">
+                    <div class="sp-pro-title">
+                        <h5> 
+                            ${items.product_title}
+                        </h5>
+                        <a href="javascript:void(0)" class="closebtn cc-sp-sticky-cart-remove-btn" data-value="${items.id}" style="font-size:19px">&times;</a>
+                    </div>
+                        ${variantTitle}    
+                        <p class="sp-product-price">${Shopify.currency.active}
+                        ${parseInt(items.price) / 100}.00</p>
+                        <div class="cc-sp-quantity buttons_added">
+                <input type="button" value="-" class="minus cc-sp-sticky-cart-minus-btn" style="background-color:transparent;" data-value="${items.id}"><input id="cc-sp-sticky-cart-items-count" type="number" step="1" name="cc-sp-quantity" 
+                value= ${items.quantity} title="Qty" class="cc-sp-input-text cc-qty text" size="4" pattern="" inputmode=""><input type="button" value="+" class="plus cc-sp-sticky-cart-plus-btn" style="background-color:transparent;" data-value="${items.id}">
+            </div>
+                    </div>
+                </div>`
+                        ).insertAfter("#cc-sp-share-cart-sidenav-main");
+
+                        totalprice += (Math.floor(parseInt(items.final_line_price) / 100));
+                    }
+
+                    $jq321('#currency').html(Shopify.currency.active);
+                    $jq321('#total_text_drawer').html(totalprice + ".00");
+                    $jq321("#cc-sp-sticky-cart-count").html(totalItemsCount);
+                    $jq321("#drawer_button").attr("href", copyLink);
+                    $jq321("#cc-sp-share-cart-copy-link-icon").attr("copy-link", copyLink);
+                    $jq321('#cc-sp-share-cart-mail-icon').attr("href", "mailto:?subject=Checkout%20my%20cart&body=" + copyLink);
+
+                    //When user click on the copy link button
+                    $jq321("#cc-sp-share-cart-copy-link-icon").on("click", function () {
+                        navigator.clipboard.writeText($jq321(this).attr("copy-link"));
+                        setTimeout(function () {
+                            $jq321("#cc-sp-share-cart-copied-message-text").show();
+                        }, 2000);
+                    });
+                    //Remove cart item
+                    $jq321(".cc-sp-sticky-cart-remove-btn").click(function () {
+                        let itemID = $jq321(this).attr("data-value");
+                        cartUpdateCall(itemID, 0);
+                        // setTimeout(function () { fetchItemsForStickyCart(); }, 3000);
+                    });
+                    //Minus the quantity
+                    $jq321(".cc-sp-sticky-cart-minus-btn").click(function () {
+                        let itemID = $jq321(this).attr("data-value");
+                        let currentItemsCount = $jq321("#cc-sp-sticky-cart-items-count").val();
+                        currentItemsCount = parseInt(currentItemsCount) - 1;
+                        cartUpdateCall(itemID, currentItemsCount);
+                        // setTimeout(function () { fetchItemsForStickyCart(); }, 3000);
+                    });
+                    //Plus the quantity
+                    $jq321(".cc-sp-sticky-cart-plus-btn").click(function () {
+                        let itemID = $jq321(this).attr("data-value");
+                        let currentItemsCount = $jq321("#cc-sp-sticky-cart-items-count").val();
+                        currentItemsCount = parseInt(currentItemsCount) + 1;
+                        cartUpdateCall(itemID, currentItemsCount);
+                        // setTimeout(function () { fetchItemsForStickyCart(); }, 3000);
+                    });
+                }
+            });
+    }
+
+    function stickyCart(response) {
+        $jq321("body").prepend(response.cart_icon);
+        $jq321("body").prepend(response.cart_drawer);
+        //attach event with widget
+        $jq321("#stickycart_icon").click(function () {
+            $jq321("#cc-sp-share-cart-sidenav").show();
+            $jq321(".sp-comment-sticky").hide();
+        });
+        //Attach event of sidenav close
+        $jq321("#drawer_close").click(function () {
+            $jq321("#cc-sp-share-cart-sidenav").hide();
+            $jq321(".sp-comment-sticky").show();
+        });
+
+        fetchItemsForStickyCart();
+        setInterval(function () {
+            fetchItemsForStickyCart();
+        }, 4000);
+    }
+    // ---------------------------------- < /STICKY CART MODULE> --------------------------------
+
 });
 
 // QUICK PRODUCT VIEW ADD TO CART CALL
@@ -2827,7 +2972,6 @@ function addToCart() {
         body: JSON.stringify(formData)
     })
         .then(response => {
-            console.log(response);
             return response.json();
         })
         .catch((error) => {
