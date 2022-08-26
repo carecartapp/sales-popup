@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 4.1.0
+ * @version 4.2.0
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -42,7 +42,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
     scriptInjection("https://cdnjs.cloudflare.com/ajax/libs/Swiper/5.4.5/js/swiper.min.js");
 
-    var version = "4.1.0";
+    var version = "4.2.0";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -2405,16 +2405,24 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         var allLinks = [];
         var product_id = (meta.product && meta.product.id) ? meta.product.id : '';
 
-        if (product_id == '') {
-            $jq321("a").each(function () {
+        if (product_id == '') 
+        {
+            $jq321("main a").each(function () 
+            {
                 var href = $jq321(this).attr('href');
-                if (href !== "/" && href !== undefined && href !== "#") {
+                    
+                if (href !== "/" && href !== undefined && href !== "#") 
+                {
                     var url = href.split("/");
-                    if ($jq321.inArray("products", url) != -1) {
+                    
+                    if ($jq321.inArray("products", url) != -1) 
+                    {
                         allLinks.push(href);
                     }
                 }
             });
+
+            $jq321.unique(allLinks);
         }
         else {
             $jq321("a").each(function () {
@@ -2814,7 +2822,11 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                             for (const items of cartItems) {
                                 copyLink = copyLink + items.variant_id + ":" + items.quantity + ",";
                             }
+
+                            //Set the link of copy link icon
+                            copyLink = copyLink.slice(0, -1);
                             $jq321("#cc-sp-share-cart-copy-link-icon").attr("copy-link", copyLink);
+
                             //Copy icon
                             $jq321("#cc-sp-share-cart-copy-link-icon").on("click", function () {
                                 $jq321("#cc-sp-share-cart-copied-message-text").show();
@@ -2823,8 +2835,9 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                                     $jq321("#cc-sp-share-cart-copied-message-text").hide();
                                 }, 3000);
                             });
+
                             //mail icon
-                            $jq321("#cc-sp-share-cart-mail-icon-anchor").attr("href", "mailto:muhammad.farooq@vaivaltech.com?subject=Checkout%20my%20cart&body=" + copyLink);
+                            $jq321("#cc-sp-share-cart-mail-icon-anchor").attr("href", "mailto:?subject=Checkout%20my%20cart&body=" + copyLink);
                             $jq321("#cc-sp-share-cart-mail-icon").on("click", function () {
                                 window.location.href = "mailto:?subject=Checkout%20my%20cart&body=" + copyLink;
                             });
@@ -2853,7 +2866,6 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         });
     }
 
-
     function fetchItemsForStickyCart() {
 
         fetch('/cart.json', { method: 'GET' })
@@ -2863,7 +2875,11 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                 if (cartItems.length == 0) {
                     $jq321(".cc-inner-content").remove();
                     $jq321("#cc-sp-share-cart-empty-cart-text").show();
-                    $jq321("#cc-sp-share-cart-copy-link-icon").attr("copy-link", "#")
+                    $jq321("#cc-sp-share-cart-copy-link-icon").attr("copy-link", "#");
+                    $jq321("#cc-sp-sticky-cart-loader-text").hide();
+                    $jq321("#cc-sp-sticky-cart-count").html('0');
+                    $jq321("#total_text_drawer").html('');
+                    $jq321("#currency").html('');
                 } else {
                     let copyLink = "https://" + Shopify.shop + "/cart/";
                     let totalprice = 0;
@@ -2890,16 +2906,16 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                         <p class="sp-product-price">${Shopify.currency.active}
                         ${parseInt(items.price) / 100}.00</p>
                         <div class="cc-sp-quantity buttons_added">
-                <input type="button" value="-" class="minus cc-sp-sticky-cart-minus-btn" style="background-color:transparent;" data-value="${items.id}"><input id="cc-sp-sticky-cart-items-count" type="number" step="1" name="cc-sp-quantity" 
-                value= ${items.quantity} title="Qty" class="cc-sp-input-text cc-qty text" size="4" pattern="" inputmode=""><input type="button" value="+" class="plus cc-sp-sticky-cart-plus-btn" style="background-color:transparent;" data-value="${items.id}">
+                <input type="button" value="-" current-quntity="${items.quantity}" class="minus cc-sp-sticky-cart-minus-btn" style="background-color:transparent;" data-value="${items.id}"><input id="cc-sp-sticky-cart-items-count" type="number" step="1" name="cc-sp-quantity" 
+                value= ${items.quantity} title="Quantity" class="cc-sp-input-text cc-qty text" size="4" pattern="" inputmode=""><input type="button" value="+" class="plus cc-sp-sticky-cart-plus-btn" style="background-color:transparent;" current-quntity="${items.quantity}" data-value="${items.id}">
             </div>
                     </div>
                 </div>`
                         ).insertAfter("#cc-sp-share-cart-sidenav-main");
-
                         totalprice += (Math.floor(parseInt(items.final_line_price) / 100));
                     }
 
+                    copyLink = copyLink.slice(0, -1);
                     $jq321('#currency').html(Shopify.currency.active);
                     $jq321('#total_text_drawer').html(totalprice + ".00");
                     $jq321("#cc-sp-sticky-cart-count").html(totalItemsCount);
@@ -2909,55 +2925,65 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
                     //When user click on the copy link button
                     $jq321("#cc-sp-share-cart-copy-link-icon").on("click", function () {
+                        $jq321("#cc-sp-sticky-cart-loader-text").show();
                         navigator.clipboard.writeText($jq321(this).attr("copy-link"));
+                        $jq321("#cc-sp-sticky-cart-copied-message-text").show();
                         setTimeout(function () {
-                            $jq321("#cc-sp-share-cart-copied-message-text").show();
+                            $jq321("#cc-sp-sticky-cart-copied-message-text").hide();
                         }, 2000);
                     });
+
                     //Remove cart item
                     $jq321(".cc-sp-sticky-cart-remove-btn").click(function () {
+                        $jq321("#cc-sp-sticky-cart-loader-text").show();
                         let itemID = $jq321(this).attr("data-value");
                         cartUpdateCall(itemID, 0);
-                        // setTimeout(function () { fetchItemsForStickyCart(); }, 3000);
                     });
+
                     //Minus the quantity
                     $jq321(".cc-sp-sticky-cart-minus-btn").click(function () {
+                        $jq321("#cc-sp-sticky-cart-loader-text").show();
                         let itemID = $jq321(this).attr("data-value");
-                        let currentItemsCount = $jq321("#cc-sp-sticky-cart-items-count").val();
+                        let currentItemsCount = $jq321(this).attr("current-quntity");
                         currentItemsCount = parseInt(currentItemsCount) - 1;
                         cartUpdateCall(itemID, currentItemsCount);
-                        // setTimeout(function () { fetchItemsForStickyCart(); }, 3000);
                     });
+
                     //Plus the quantity
                     $jq321(".cc-sp-sticky-cart-plus-btn").click(function () {
+                        $jq321("#cc-sp-sticky-cart-loader-text").show();
                         let itemID = $jq321(this).attr("data-value");
-                        let currentItemsCount = $jq321("#cc-sp-sticky-cart-items-count").val();
+                        let currentItemsCount = $jq321(this).attr("current-quntity");
                         currentItemsCount = parseInt(currentItemsCount) + 1;
                         cartUpdateCall(itemID, currentItemsCount);
-                        // setTimeout(function () { fetchItemsForStickyCart(); }, 3000);
                     });
+                    $jq321("#cc-sp-sticky-cart-loader-text").hide();
                 }
             });
     }
 
     function stickyCart(response) {
-        $jq321("body").prepend(response.cart_icon);
-        $jq321("body").prepend(response.cart_drawer);
-        //attach event with widget
-        $jq321("#stickycart_icon").click(function () {
-            $jq321("#cc-sp-share-cart-sidenav").show();
-            $jq321(".sp-comment-sticky").hide();
-        });
-        //Attach event of sidenav close
-        $jq321("#drawer_close").click(function () {
-            $jq321("#cc-sp-share-cart-sidenav").hide();
-            $jq321(".sp-comment-sticky").show();
-        });
+        setTimeout(function () {
+            $jq321("body").prepend(response.cart_icon);
+            $jq321("body").prepend(response.cart_drawer);
 
-        fetchItemsForStickyCart();
-        setInterval(function () {
+            //attach event with widget
+            $jq321("#stickycart_icon").click(function () {
+                $jq321("#cc-sp-share-cart-sidenav").show();
+                $jq321(".sp-comment-sticky").hide();
+            });
+
+            //Attach event of sidenav close
+            $jq321("#drawer_close").click(function () {
+                $jq321("#cc-sp-share-cart-sidenav").hide();
+                $jq321(".sp-comment-sticky").show();
+            });
+
             fetchItemsForStickyCart();
-        }, 4000);
+            setInterval(function () {
+                fetchItemsForStickyCart();
+            }, 4000);
+        }, 2000);
     }
     // ---------------------------------- < /STICKY CART MODULE> --------------------------------
 
