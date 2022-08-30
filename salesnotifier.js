@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 4.2.0
+ * @version 4.2.1
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -42,7 +42,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
     scriptInjection("https://cdnjs.cloudflare.com/ajax/libs/Swiper/5.4.5/js/swiper.min.js");
 
-    var version = "4.2.0";
+    var version = "4.2.1";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -677,8 +677,8 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                 "cssTrustBadges": "https://sales-pop.carecart.io/lib/badges-box.css",
                 "cssAnnouncement": "https://sales-pop.carecart.io/lib/announcement.css",
                 "legacyCss": "https://sales-pop.carecart.io/lib/salesnotifier.css",
-                "cssShareCart": "https://" + tempAnchorTag.hostname + "/lib/sales-pop-share-cart.css",
-                "cssStickyCart": "https://" + tempAnchorTag.hostname + "/lib/sales-pop-sticky-cart.css"
+                "cssShareCart": "https://sales-pop.carecart.io/lib/sales-pop-share-cart.css",
+                "cssStickyCart": "https://sales-pop.carecart.io/lib/sales-pop-sticky-cart.css"
             };
         }
 
@@ -2401,84 +2401,98 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     // ---------------------------------- <PRODUCT QUICK VIEW FOR COLLECTION PAGE> -----------------
     // ******************************************************************************************
 
-    function collectionQuickView(quickViewCollectionText, quickViewCollectionLayout, quickViewCollectionPosition) {
+    function collectionQuickView(quickViewCollectionText, quickViewCollectionLayout, quickViewCollectionPosition) 
+    {    
         var allLinks = [];
+
         var product_id = (meta.product && meta.product.id) ? meta.product.id : '';
+
+        var homepage = window.location.pathname;
+
+        var currentPageHandle = window.location.pathname.split("/");
 
         if (product_id == '') 
         {
-            $jq321("main a").each(function () 
+            if (($jq321.inArray("collections", currentPageHandle) != -1) || (homepage == '/')) 
             {
-                var href = $jq321(this).attr('href');
-                    
-                if (href !== "/" && href !== undefined && href !== "#") 
+                $jq321("main a").each(function () 
                 {
-                    var url = href.split("/");
-                    
-                    if ($jq321.inArray("products", url) != -1) 
+                    var href = $jq321(this).attr('href');
+                        
+                    if (href !== "/" && href !== undefined && href !== "#") 
                     {
-                        allLinks.push(href);
+                        var url = href.split("/");
+                        
+                        if ($jq321.inArray("products", url) != -1) 
+                        {
+                            allLinks.push(href);
+                        }
                     }
-                }
-            });
+                });
 
-            $jq321.unique(allLinks);
-        }
-        else {
-            $jq321("a").each(function () {
-                var href = $jq321(this).attr('href');
-                var url = href.split("/");
-                if ($jq321.inArray("products", url) != -1) {
-                    var otherurl = href.split("=");
-                    var res = otherurl[0].split("?");
-                    if (res[1] == 'pr_prod_strat') {
-                        allLinks.push(href);
-                    }
-                }
-            });
-        }
-
-        // PRODUCT QUICK VIEW COLLECTION CREATE BUTTON
-        var divCount = 0;
-        var linkCount = 0;
-
-        $jq321("img").each(function () {
-
-            // GET IMAGE URL
-            var href = $jq321(this).attr('data-srcset');
-            var data_image = $jq321(this).attr('data-image');
-            var srcset = $jq321(this).attr('srcset');
-
-            if (((href !== undefined) && (data_image !== undefined)) || ((srcset !== undefined) && (product_id == ''))) {
-                if (quickViewCollectionLayout == 2) {
-                    // FOR QUICK VIEW BUTTON
-                    var newButton = '<input type="button" class="quick-view collection-quick-view" value="' + quickViewCollectionText + '" data-product-url="' + allLinks[linkCount] + '" data-quick-view="1">';
-                }
-                else if (quickViewCollectionLayout == 1) {
-                    // FOR QUICK VIEW EYE
-                    var newButton = '<a id="positon-right" class="EyeViewBtn collection-quick-view ' + quickViewCollectionPosition + '" data-product-url="' + allLinks[linkCount] + '" data-quick-view="1" href="#"><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="577.029px" height="577.029px" viewBox="0 0 577.029 577.029" style="enable-background:new 0 0 577.029 577.029;" xml:space="preserve"><path d="M288.514,148.629c73.746,0,136.162,33.616,175.539,61.821c46.652,33.415,70.66,65.737,76.885,78.065   c-6.232,12.327-30.232,44.649-76.885,78.065c-39.377,28.204-101.793,61.82-175.539,61.82c-73.746,0-136.161-33.616-175.539-61.82   c-46.661-33.416-70.66-65.738-76.894-78.065c6.234-12.328,30.233-44.65,76.885-78.065   C152.353,182.245,214.768,148.629,288.514,148.629 M288.514,113.657C129.176,113.657,0,253.543,0,288.515   s129.176,174.857,288.514,174.857c159.339,0,288.515-139.886,288.515-174.857S447.854,113.657,288.514,113.657L288.514,113.657z    M288.514,183.601c-57.939,0-104.914,46.975-104.914,104.914c0,57.938,46.975,104.914,104.914,104.914   s104.914-46.976,104.914-104.914C393.428,230.576,346.453,183.601,288.514,183.601z M260.266,288.515   c-24.515,0-44.388-19.873-44.388-44.388c0-24.515,19.873-44.387,44.388-44.387c24.515,0,44.388,19.873,44.388,44.387   C304.654,268.642,284.781,288.515,260.266,288.515z"/></svg></a>';
-
-                }
-
-                var check = $jq321(this).parent();
-
-                // CREATE DIV
-                var newDiv = '<div id="image-with-button' + divCount + '" class="button-on-hover"></div>';
-
-                // INSERT DIV
-                $jq321(newDiv).insertBefore(check);
-
-                // APPEND IMAGE IN DIV
-                $jq321(check).appendTo($jq321('#image-with-button' + divCount));
-
-                // INSERT BUTTON/EYE IN DIV
-                $jq321(newButton).insertBefore(this);
-                divCount++;
-                linkCount++;
+                $jq321.unique(allLinks);
             }
-        });
-    }
+        }
+        
 
+        if (($jq321.inArray("collections", currentPageHandle) != -1) || (homepage == '/')) 
+        {
+            // PRODUCT QUICK VIEW COLLECTION CREATE BUTTON
+            var divCount = 0;
+            var linkCount = 0;
+            var qvselector;
+
+            var cardwrapper = $jq321("main").find('.card-wrapper');
+            if (cardwrapper.length != 0)
+            {
+                qvselector = $jq321("main .card-wrapper").find("img:first");
+            }
+            else
+            {
+                qvselector = $jq321("main").find("img");
+            }
+
+            qvselector.each(function () {
+
+                // GET IMAGE URL
+                var href = $jq321(this).attr('data-srcset');
+                var data_image = $jq321(this).attr('data-image');
+                var srcset = $jq321(this).attr('srcset');
+
+                if (((href !== undefined) && (data_image !== undefined)) || ((srcset !== undefined) && (product_id == ''))) 
+                {
+                    if (quickViewCollectionLayout == 2) 
+                    {
+                        // FOR QUICK VIEW BUTTON
+                        var newButton = '<input type="button" class="quick-view collection-quick-view" value="' + quickViewCollectionText + '" data-product-url="' + allLinks[linkCount] + '" data-quick-view="1">';
+                    }
+                    else if (quickViewCollectionLayout == 1) 
+                    {
+                        // FOR QUICK VIEW EYE
+                        var newButton = '<a id="positon-right" class="EyeViewBtn collection-quick-view ' + quickViewCollectionPosition + '" data-product-url="' + allLinks[linkCount] + '" data-quick-view="1" href="#"><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="577.029px" height="577.029px" viewBox="0 0 577.029 577.029" style="enable-background:new 0 0 577.029 577.029;" xml:space="preserve"><path d="M288.514,148.629c73.746,0,136.162,33.616,175.539,61.821c46.652,33.415,70.66,65.737,76.885,78.065   c-6.232,12.327-30.232,44.649-76.885,78.065c-39.377,28.204-101.793,61.82-175.539,61.82c-73.746,0-136.161-33.616-175.539-61.82   c-46.661-33.416-70.66-65.738-76.894-78.065c6.234-12.328,30.233-44.65,76.885-78.065   C152.353,182.245,214.768,148.629,288.514,148.629 M288.514,113.657C129.176,113.657,0,253.543,0,288.515   s129.176,174.857,288.514,174.857c159.339,0,288.515-139.886,288.515-174.857S447.854,113.657,288.514,113.657L288.514,113.657z    M288.514,183.601c-57.939,0-104.914,46.975-104.914,104.914c0,57.938,46.975,104.914,104.914,104.914   s104.914-46.976,104.914-104.914C393.428,230.576,346.453,183.601,288.514,183.601z M260.266,288.515   c-24.515,0-44.388-19.873-44.388-44.388c0-24.515,19.873-44.387,44.388-44.387c24.515,0,44.388,19.873,44.388,44.387   C304.654,268.642,284.781,288.515,260.266,288.515z"/></svg></a>';
+
+                    }
+
+                    var check = $jq321(this).parent();
+
+                    // CREATE DIV
+                    var newDiv = '<div id="image-with-button' + divCount + '" class="button-on-hover"></div>';
+
+                    // INSERT DIV
+                    $jq321(newDiv).insertBefore(check);
+
+                    // APPEND IMAGE IN DIV
+                    $jq321(check).appendTo($jq321('#image-with-button' + divCount));
+
+                    // INSERT BUTTON/EYE IN DIV
+                    $jq321(newButton).insertBefore(this);
+                    divCount++;
+                    linkCount++;
+                }
+            });
+
+        }
+    }
 
     // PRODUCT QUICK VIEW COLLECTION CALL
     $jq321("body").on('click', '.collection-quick-view', function (e) {
