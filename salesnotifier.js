@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 4.2.2
+ * @version 4.2.3
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -42,7 +42,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
     scriptInjection("https://cdnjs.cloudflare.com/ajax/libs/Swiper/5.4.5/js/swiper.min.js");
 
-    var version = "4.2.2";
+    var version = "4.2.3";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -2852,7 +2852,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                             });
 
                             //mail icon
-                            $jq321("#cc-sp-share-cart-mail-icon-anchor").attr("href", "mailto:?subject=Checkout%20my%20cart&body=" + copyLink);
+                            $jq321("#cc-sp-share-cart-mail-icon-anchor").attr("href", "mailto:?subject=Checkout%20my%20cart&body=%0AHi%2C%0A%0ATake%20a%20look%20at%20what%20I%20am%20buying%0A%0A" + copyLink);
                             $jq321("#cc-sp-share-cart-mail-icon").on("click", function () {
                                 window.location.href = "mailto:?subject=Checkout%20my%20cart&body=" + copyLink;
                             });
