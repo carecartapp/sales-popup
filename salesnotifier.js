@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 4.2.1
+ * @version 4.2.2
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -42,7 +42,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
     scriptInjection("https://cdnjs.cloudflare.com/ajax/libs/Swiper/5.4.5/js/swiper.min.js");
 
-    var version = "4.2.1";
+    var version = "4.2.2";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -2494,6 +2494,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         }
     }
 
+
     // PRODUCT QUICK VIEW COLLECTION CALL
     $jq321("body").on('click', '.collection-quick-view', function (e) {
         e.preventDefault();
@@ -2890,7 +2891,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                     $jq321(".cc-inner-content").remove();
                     $jq321("#cc-sp-share-cart-empty-cart-text").show();
                     $jq321("#cc-sp-share-cart-copy-link-icon").attr("copy-link", "#");
-                    $jq321("#cc-sp-sticky-cart-loader-text").hide();
+                    $jq321(".sp-loader").hide();
                     $jq321("#cc-sp-sticky-cart-count").html('0');
                     $jq321("#total_text_drawer").html('');
                     $jq321("#currency").html('');
@@ -2939,7 +2940,6 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
                     //When user click on the copy link button
                     $jq321("#cc-sp-share-cart-copy-link-icon").on("click", function () {
-                        $jq321("#cc-sp-sticky-cart-loader-text").show();
                         navigator.clipboard.writeText($jq321(this).attr("copy-link"));
                         $jq321("#cc-sp-sticky-cart-copied-message-text").show();
                         setTimeout(function () {
@@ -2949,14 +2949,14 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
                     //Remove cart item
                     $jq321(".cc-sp-sticky-cart-remove-btn").click(function () {
-                        $jq321("#cc-sp-sticky-cart-loader-text").show();
+                        $jq321(".sp-loader").show();
                         let itemID = $jq321(this).attr("data-value");
                         cartUpdateCall(itemID, 0);
                     });
 
                     //Minus the quantity
                     $jq321(".cc-sp-sticky-cart-minus-btn").click(function () {
-                        $jq321("#cc-sp-sticky-cart-loader-text").show();
+                        $jq321(".sp-loader").show();
                         let itemID = $jq321(this).attr("data-value");
                         let currentItemsCount = $jq321(this).attr("current-quntity");
                         currentItemsCount = parseInt(currentItemsCount) - 1;
@@ -2965,13 +2965,13 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
                     //Plus the quantity
                     $jq321(".cc-sp-sticky-cart-plus-btn").click(function () {
-                        $jq321("#cc-sp-sticky-cart-loader-text").show();
+                        $jq321(".sp-loader").show();
                         let itemID = $jq321(this).attr("data-value");
                         let currentItemsCount = $jq321(this).attr("current-quntity");
                         currentItemsCount = parseInt(currentItemsCount) + 1;
                         cartUpdateCall(itemID, currentItemsCount);
                     });
-                    $jq321("#cc-sp-sticky-cart-loader-text").hide();
+                    $jq321(".sp-loader").hide();
                 }
             });
     }
