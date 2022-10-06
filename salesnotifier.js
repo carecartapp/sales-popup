@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 4.2.3
+ * @version 5.0.0
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -39,10 +39,13 @@ function scriptInjection(src, callback) {
 
 scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     window.$jq321 = jQuery.noConflict(true);
+    //variable for impressionsID
+    let impressionsID = null;
+    let timeCountdownForImpression = 0;
 
     scriptInjection("https://cdnjs.cloudflare.com/ajax/libs/Swiper/5.4.5/js/swiper.min.js");
 
-    var version = "4.2.3";
+    var version = "5.0.0";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -688,25 +691,32 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         var backend = "https://" + tempAnchorTag.hostname + "/index.php/FrontController/";
         if ("sales-pop.carecart.io" === tempAnchorTag.hostname) {
             backend = "https://tracking-" + tempAnchorTag.hostname + "/index.php/FrontController/";
+            impressionURL = "https://tracking-" + tempAnchorTag.hostname + "/index.php/ImpressionsCount/";
         }
         else if ("lazy-cow-13.telebit.io" === tempAnchorTag.hostname) {
             backend = "http://localhost:8501/index.php/FrontController/";
+            impressionURL = "http://localhost:8501/index.php/ImpressionsCount/";
         }
         else if ("uat-salespop.carecart.io" === tempAnchorTag.hostname) {
             backend = "https://uat-tracking-sales-pop.carecart.io/index.php/FrontController/";
+            impressionURL = "https://uat-tracking-sales-pop.carecart.io/index.php/ImpressionsCount/";
         }
         else if ("dev-sales-pop.carecart.io" === tempAnchorTag.hostname) {
             backend = "https://dev-tracking-sales-pop.carecart.io/index.php/FrontController/";
+            impressionURL = "https://dev-tracking-sales-pop.carecart.io/index.php/ImpressionsCount/";
         }
         else if ("odd-earwig-64.telebit.io" === tempAnchorTag.hostname) {
             backend = "http://localhost:8500/index.php/FrontController/";
+            impressionURL = "http://localhost:8501/index.php/ImpressionsCount/";
         }
         else if ("helpless-insect-91.telebit.io" === tempAnchorTag.hostname) {
             backend = "http://localhost:8500/index.php/FrontController/";
+            impressionURL = "http://localhost:8501/index.php/ImpressionsCount/";
         }
 
         return {
             "backend": backend,
+            "impressionURL": impressionURL,
             "css": "https://" + tempAnchorTag.hostname + "/public/front_assets/new-ui/css/notif-box.css?v" + version,
             "cssStock": "https://" + tempAnchorTag.hostname + "/lib/stock-box.css?v" + version,
             "cssTimer": "https://" + tempAnchorTag.hostname + "/lib/timer-box.css?v" + version,
@@ -783,7 +793,8 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         triggered_count: 0,
         debugBB: 0,
         checkDevice: '',
-        conversionformSubmitted: false
+        conversionformSubmitted: false,
+        impressionURL: impressionURL
     };
 
     /**
@@ -1143,6 +1154,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         spDebuger.storeLog("BACKEND-URL: ", salespoplib_vars_obj.backend_url);
 
         apiResponse = response;
+        impressionsID = apiResponse.impressionsID;
 
         /////////////////////////////////// start local storage check
         //use notifications from response data if available and update time stamp, if notifications not found in response then get from local storage if available
@@ -1222,7 +1234,8 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
         // Time COUNTDOWN CALL
         if (apiResponse && apiResponse.timer && apiResponse.timer !== null) {
-
+            
+            timeCountdownForImpression = 1;
             setTimeout(function () {
                 $jq321("head").append($jq321("<link/>", {
                     rel: "stylesheet",
@@ -1603,7 +1616,11 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             $jq321(".pur-time").html(timeDifference);
         }
 
-        // saveImpression(1); Imression save call removed for now
+        let salesNotificationImpressions = {
+            id: impressionsID,
+            salesNotification : 1
+        }
+        postImpressions(salesNotificationImpressions, "sp_sales_notifications_impressions");
     };
 
 
@@ -2343,6 +2360,12 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             timeCountdownView(response.timer);
         }
 
+        //save the impressions
+        let quickViewImpressions = {
+            id: impressionsID,
+            quickView : 1
+        }
+        postImpressions(quickViewImpressions, "sp_quick_view_impressions");
     };
 
     // GET QUICK PRODUCT VIEW STOCK COUNTDOWN
@@ -2587,34 +2610,34 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
     // ---------------------------------- <PAYMENT PLAN> ----------------------------------------
     // ******************************************************************************************
-    function saveImpression(type) {
-        $jq321.ajax({
-            type: "GET",
-            url: salespoplib_vars_obj.backend_url + 'saveImpression',
-            dataType: "jsonp",
-            jsonpCallback: "impressionSaved",
-            crossDomain: true,
-            async: false,
-            data: {
-                "domain_url": Shopify.shop,
-                "type": type
-            },
-            success: function () {
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(jqXHR);
-                console.log("status: " + textStatus);
-                console.log("err: " + errorThrown);
-            },
-            complete: function () {
-            }
-        });
-    }
+    // function saveImpression(type) {
+    //     $jq321.ajax({
+    //         type: "GET",
+    //         url: salespoplib_vars_obj.backend_url + 'saveImpression',
+    //         dataType: "jsonp",
+    //         jsonpCallback: "impressionSaved",
+    //         crossDomain: true,
+    //         async: false,
+    //         data: {
+    //             "domain_url": Shopify.shop,
+    //             "type": type
+    //         },
+    //         success: function () {
+    //         },
+    //         error: function (jqXHR, textStatus, errorThrown) {
+    //             console.log(jqXHR);
+    //             console.log("status: " + textStatus);
+    //             console.log("err: " + errorThrown);
+    //         },
+    //         complete: function () {
+    //         }
+    //     });
+    // }
 
-    //Click CallBack
-    window.impressionSaved = function (result) {
-        // console.log(result);
-    };
+    // //Click CallBack
+    // window.impressionSaved = function (result) {
+    //     // console.log(result);
+    // };
     // ---------------------------------- </PAYMENT PLAN> --------------------------------
 
     // ---------------------------------- <TIMER FOR COLLECTION PAGE> --------------------------
@@ -2770,8 +2793,12 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             doCalculationForShipping(announcementBarResponse.free_ship_settings);
             addCartInterval(announcementBarResponse.free_ship_settings);
         }
-    }
-
+        /**
+        * Attach event on click
+        */
+        attachEventOnShippingBar(announcementBarResponse.clickClassShippingBar);
+	}
+    
     $jq321("body").on('click', '#ccannouncement-close', function (e) {
         e.preventDefault();
 
@@ -2818,6 +2845,19 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                     }
                 }
             });
+    }
+    
+    /**
+     * Free shipping bar click
+     */
+    function attachEventOnShippingBar(className) { 
+        $jq321("#ccannouncement-main").on("click", function () { 
+            let freeShippingBarClick = {
+                id: impressionsID,
+                freeShippingBarClick : 1
+            }
+            postImpressions(freeShippingBarClick, "sp_free_shipping_bar_click");
+        });
     }
     // ---------------------------------- </ANNOUNCEMENT BAR MODULE> --------------------------------
 
@@ -3000,6 +3040,60 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         }, 2000);
     }
     // ---------------------------------- < /STICKY CART MODULE> --------------------------------
+    // ---------------------------------- <Impressions starts here> --------------------------------
+    $jq321(document).ready(function () {
+        setTimeout(function () {
+            let timeCountdown = $jq321(".timer-store-front").length > 0 ? 1 : 0;
+            let stockCountdown = $jq321(".stock-top").length > 0 ? 1 : 0;
+            let visitorCounter = $jq321(".visitor-counter-content-box-carecartbysalespop-2020").length > 0 ? 1 : 0;
+            let soldCounter = $jq321(".sold-counter-content-box").length > 0 ? 1 : 0;
+            let trustBadges = $jq321("#CloneBox").length > 0 ? 1 : 0;
+            let shippingBar = $jq321(".ccAnnouncmntBanner-bpop").length > 0 ? 1 : 0;
+
+            if (timeCountdown == 1 || stockCountdown == 1 || visitorCounter == 1 || soldCounter == 1 || trustBadges == 1 || shippingBar == 1) {
+                let impressionStats = {
+                    id     : impressionsID,
+                    timer  : timeCountdownForImpression,
+                    stock  : stockCountdown,
+                    visitor: visitorCounter,
+                    sold   : soldCounter,
+                    trust  : trustBadges,
+                    bar    : shippingBar
+                };
+                postImpressions(impressionStats, "sp_six_modules_impressions");   
+            }
+         }, 3000); //@todo decrease this time to 3 seconds while pushing on live;
+    });
+
+    function postImpressions(data, impressionTitle) {
+        $jq321.ajax({
+            type: "GET",
+            url: salespoplib_vars_obj.impressionURL + 'saveImpressions',
+            dataType: "jsonp",
+            jsonpCallback: "impressionSaved",
+            crossDomain: true,
+            async: false,
+            data: {
+                "domain_url": Shopify.shop,
+                "impressions": data,
+                "title": impressionTitle
+            },
+            success: function () {
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR);
+                console.log("status: " + textStatus);
+                console.log("err: " + errorThrown);
+            },
+            complete: function () {
+            }
+        });
+    }
+
+    window.impressionSaved = function (result) {
+        // console.log(result);
+    };
+    // ---------------------------------- </Impressions> --------------------------------
 
 });
 
