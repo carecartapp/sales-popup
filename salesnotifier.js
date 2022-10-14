@@ -3,7 +3,8 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 5.0.0
+ * @version 5.0.1
+ * Date 14-10-2022 07:52PM
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -3076,7 +3077,8 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             data: {
                 "domain_url": Shopify.shop,
                 "impressions": data,
-                "title": impressionTitle
+                "title": impressionTitle,
+		"version": Math.random()+Date.now()  
             },
             success: function () {
             },
