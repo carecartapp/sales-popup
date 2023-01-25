@@ -3,8 +3,8 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 5.0.1
- * Date 14-10-2022 07:52PM
+ * @version 5.0.2
+ * Date 25-01-2023 10:05PM
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -46,7 +46,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
     scriptInjection("https://cdnjs.cloudflare.com/ajax/libs/Swiper/5.4.5/js/swiper.min.js");
 
-    var version = "5.0.0";
+    var version = "5.0.2";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -713,6 +713,9 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         else if ("helpless-insect-91.telebit.io" === tempAnchorTag.hostname) {
             backend = "http://localhost:8500/index.php/FrontController/";
             impressionURL = "http://localhost:8501/index.php/ImpressionsCount/";
+        }else if ("shop.kind-monkey-43.telebit.io" === tempAnchorTag.hostname) {
+            backend = "http://localhost:8500/index.php/FrontController/";
+            impressionURL = "http://localhost:8500/index.php/ImpressionsCount/";
         }
 
         return {
@@ -2699,31 +2702,36 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
     function collectionTimer(responseTimer, responseTimerCollection) {
         var allLinks = [];
-        var product_id = (meta.product && meta.product.id) ? meta.product.id : '';
-        if (product_id == '') {
+        //var product_id = (meta.product && meta.product.id) ? meta.product.id : '';
+        if (meta.products != undefined && meta.products.length > 1) {
             $jq321("a").each(function () {
                 var href = $jq321(this).attr('href');
-                var url = href.split("/");
-                if (($jq321.inArray("products", url) != -1)) {
-                    if ($jq321.inArray(href, allLinks) == -1) {
-                        allLinks.push(href);
+                if(href != undefined && href.indexOf('/products') != -1){
+                   var url = href.split("/");
+                    if (($jq321.inArray("products", url) != -1)) {
+                        if ($jq321.inArray(href, allLinks) == -1) {
+                            allLinks.push(href);
+                        }
                     }
                 }
+                
+                
             });
         }
         else {
             $jq321("a").each(function () {
                 var href = $jq321(this).attr('href');
+                if(href != undefined && href.indexOf('/products') != -1){
+                    var url = href.split("/");
 
-                var url = href.split("/");
+                    if ($jq321.inArray("products", url) != -1) {
+                        var otherurl = href.split("=");
 
-                if ($jq321.inArray("products", url) != -1) {
-                    var otherurl = href.split("=");
+                        var res = otherurl[0].split("?");
 
-                    var res = otherurl[0].split("?");
-
-                    if (res[1] == 'pr_prod_strat') {
-                        allLinks.push(href);
+                        if (res[1] == 'pr_prod_strat') {
+                            allLinks.push(href);
+                        }
                     }
                 }
             });
@@ -2742,13 +2750,26 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             return status;
         }
 
-        if (product_id == '') {
+        if (meta.products != undefined && meta.products.length > 1) {
             if (allLinks.length != 0) {
                 for (var u = 0; u < allLinks.length; u++) {
                     if (checkValue(allLinks[u], responseTimerCollection) == 'Not exist') {
                         var selectorTimeView = $jq321("[href='" + allLinks[u] + "']");
-                        selectorTimeView = selectorTimeView[0];
-                        $jq321(responseTimer.view).insertBefore(selectorTimeView);
+                        if(selectorTimeView.parent()[0].className.indexOf('card-wrapper') != -1 ){
+                            selectorTimeView = selectorTimeView.parent()[0].className;
+                        }else if(selectorTimeView.parent().parent()[0].className.indexOf('card-wrapper') != -1 ){
+                            selectorTimeView = selectorTimeView.parent().parent()[0].className;
+                        }else if(selectorTimeView.parent().parent().parent()[0].className.indexOf('card-wrapper') != -1 ){
+                            selectorTimeView = selectorTimeView.parent().parent().parent()[0].className;
+                        }else if(selectorTimeView.parent().parent().parent().parent()[0].className.indexOf('card-wrapper') != -1 ){
+                            selectorTimeView = selectorTimeView.parent().parent().parent().parent()[0].className;
+                        }else if(selectorTimeView.parent().parent().parent().parent().parent()[0].className.indexOf('card-wrapper') != -1 ){
+                            selectorTimeView = selectorTimeView.parent().parent().parent().parent().parent()[0].className;
+                        }else{
+                            selectorTimeView=  selectorTimeView.parent().parent().parent().parent().parent().parent()[0].className;
+                        }
+                        let resultSelector = selectorTimeView.split(' ');
+                        $jq321(responseTimer.view).insertBefore('.'+resultSelector[0]+':eq('+u+')');
                     }
                 }
             }
@@ -3026,6 +3047,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             $jq321("#stickycart_icon").click(function () {
                 $jq321("#cc-sp-share-cart-sidenav").show();
                 $jq321(".sp-comment-sticky").hide();
+                sixModuleImpressionFunc(1);
             });
 
             //Attach event of sidenav close
@@ -3044,27 +3066,54 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     // ---------------------------------- <Impressions starts here> --------------------------------
     $jq321(document).ready(function () {
         setTimeout(function () {
+            sixModuleImpressionFunc();
+         }, 10000); //@todo decrease this time to 3 seconds while pushing on live;
+    });
+
+    function sixModuleImpressionFunc(flag = 0){
+            let shareCart = 0;
+            let impressionStats;
             let timeCountdown = $jq321(".timer-store-front").length > 0 ? 1 : 0;
             let stockCountdown = $jq321(".stock-top").length > 0 ? 1 : 0;
             let visitorCounter = $jq321(".visitor-counter-content-box-carecartbysalespop-2020").length > 0 ? 1 : 0;
             let soldCounter = $jq321(".sold-counter-content-box").length > 0 ? 1 : 0;
             let trustBadges = $jq321("#CloneBox").length > 0 ? 1 : 0;
             let shippingBar = $jq321(".ccAnnouncmntBanner-bpop").length > 0 ? 1 : 0;
-
-            if (timeCountdown == 1 || stockCountdown == 1 || visitorCounter == 1 || soldCounter == 1 || trustBadges == 1 || shippingBar == 1) {
-                let impressionStats = {
-                    id     : impressionsID,
-                    timer  : timeCountdownForImpression,
-                    stock  : stockCountdown,
-                    visitor: visitorCounter,
-                    sold   : soldCounter,
-                    trust  : trustBadges,
-                    bar    : shippingBar
-                };
+            let stickyCart = $jq321(".sp-comment-sticky").length > 0 ? 1 : 0;
+            if($jq321(".cc-social-icons").length > 0 && $jq321(".cc-social-icons").is(':visible') == true ){
+                shareCart = 1;
+            }else{
+                shareCart = 0;
+            }
+            if (timeCountdown == 1 || stockCountdown == 1 || visitorCounter == 1 || soldCounter == 1 || trustBadges == 1 || shippingBar == 1 || stickyCart == 1 || shareCart == 1) {
+                if(flag == 1){
+                    impressionStats = {
+                        id     : impressionsID,
+                        timer  : 0,
+                        stock  : 0,
+                        visitor: 0,
+                        sold   : 0,
+                        trust  : 0,
+                        bar    : 0,
+                        sticky : 0,
+                        share  : shareCart
+                    };
+                }else{
+                    impressionStats = {
+                        id     : impressionsID,
+                        timer  : timeCountdownForImpression,
+                        stock  : stockCountdown,
+                        visitor: visitorCounter,
+                        sold   : soldCounter,
+                        trust  : trustBadges,
+                        bar    : shippingBar,
+                        sticky : stickyCart,
+                        share  : shareCart
+                    };
+                }
                 postImpressions(impressionStats, "sp_six_modules_impressions");   
             }
-         }, 3000); //@todo decrease this time to 3 seconds while pushing on live;
-    });
+    }
 
     function postImpressions(data, impressionTitle) {
         $jq321.ajax({
@@ -3078,7 +3127,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                 "domain_url": Shopify.shop,
                 "impressions": data,
                 "title": impressionTitle,
-		"version": Math.random()+Date.now()  
+                "key":Math.round(Math.random(0)+Date.now())
             },
             success: function () {
             },
