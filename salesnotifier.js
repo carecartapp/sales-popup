@@ -3,8 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 5.0.2
- * Date 25-01-2023 10:05PM
+ * @version 5.0.3
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -46,7 +45,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
     scriptInjection("https://cdnjs.cloudflare.com/ajax/libs/Swiper/5.4.5/js/swiper.min.js");
 
-    var version = "5.0.2";
+    var version = "5.0.3";
 
     function notifyPopup($) {
         //IE8 indexOf polyfill
@@ -706,7 +705,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             backend = "https://dev-tracking-sales-pop.carecart.io/index.php/FrontController/";
             impressionURL = "https://dev-tracking-sales-pop.carecart.io/index.php/ImpressionsCount/";
         }
-        else if ("odd-earwig-64.telebit.io" === tempAnchorTag.hostname) {
+        else if ("spicy-eel-65.telebit.io" === tempAnchorTag.hostname) {
             backend = "http://localhost:8500/index.php/FrontController/";
             impressionURL = "http://localhost:8501/index.php/ImpressionsCount/";
         }
@@ -2981,7 +2980,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                     </div>
                         ${variantTitle}    
                         <p class="sp-product-price">${Shopify.currency.active}
-                        ${parseInt(items.price) / 100}.00</p>
+                        ${parseInt(items.price) / 100}</p>
                         <div class="cc-sp-quantity buttons_added">
                 <input type="button" value="-" current-quntity="${items.quantity}" class="minus cc-sp-sticky-cart-minus-btn" style="background-color:transparent;" data-value="${items.id}"><input id="cc-sp-sticky-cart-items-count" type="number" step="1" name="cc-sp-quantity" 
                 value= ${items.quantity} title="Quantity" class="cc-sp-input-text cc-qty text" size="4" pattern="" inputmode=""><input type="button" value="+" class="plus cc-sp-sticky-cart-plus-btn" style="background-color:transparent;" current-quntity="${items.quantity}" data-value="${items.id}">
@@ -2989,12 +2988,12 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
                     </div>
                 </div>`
                         ).insertAfter("#cc-sp-share-cart-sidenav-main");
-                        totalprice += (Math.floor(parseInt(items.final_line_price) / 100));
+                        totalprice += parseInt(items.final_line_price.toFixed(2));
                     }
 
                     copyLink = copyLink.slice(0, -1);
                     $jq321('#currency').html(Shopify.currency.active);
-                    $jq321('#total_text_drawer').html(totalprice + ".00");
+                    $jq321('#total_text_drawer').html(Number(totalprice / 100).toLocaleString('en'));
                     $jq321("#cc-sp-sticky-cart-count").html(totalItemsCount);
                     $jq321("#drawer_button").attr("href", copyLink);
                     $jq321("#cc-sp-share-cart-copy-link-icon").attr("copy-link", copyLink);
