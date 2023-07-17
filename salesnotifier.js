@@ -1002,7 +1002,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
      * @todo this function needs to be cleaned up.
      * @returns {boolean}
      */
-    var isNotificationAllowedOnCurrentPage = function () {
+    var isNotificationAllowedOnCurrentPage = function (customPagesData) {
 
         spDebuger.storeLog("isNotificationAllowedOnCurrentPage called.");
 
@@ -1112,14 +1112,16 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             });
         }
         else {
-            Array.prototype.forEach.call(apiResponse.restrictionSettings, function (page) {
-                if (page.handle == currentPageUrl) {
-                    is_notification_allowed = entryFound = true;
-                }
-                else if (page.handle + '/' == currentPageUrl) {
-                    is_notification_allowed = entryFound = true;
-                }
-            });
+		if (parseInt(customPagesData) === 1) {
+	            Array.prototype.forEach.call(apiResponse.restrictionSettings, function (page) {
+	                if (page.handle == currentPageUrl) {
+	                    is_notification_allowed = entryFound = true;
+	                }
+	                else if (page.handle + '/' == currentPageUrl) {
+	                    is_notification_allowed = entryFound = true;
+	                }
+	            });
+		}
         }
 
         return is_notification_allowed;
@@ -1397,7 +1399,8 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         // Check whether restrict notification option is checked
         // and that the notifications are allowed on current page
         if (parseInt(apiResponse.do_restrict) === 1) {
-            var notificationsAllowed = isNotificationAllowedOnCurrentPage();
+	    var notificationsAllowed = isNotificationAllowedOnCurrentPage(apiResponse.customPagesData);
+
             spDebuger.storeLog("Notifications allowed: " + notificationsAllowed);
             if (!notificationsAllowed) {
                 return false;
