@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 5.0.3
+ * @version 5.0.5
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -44,6 +44,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
     let timeCountdownForImpression = 0;
 
     scriptInjection("https://cdnjs.cloudflare.com/ajax/libs/Swiper/5.4.5/js/swiper.min.js");
+    scriptInjection("https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js");
 
     var version = "5.0.3";
 
@@ -2173,6 +2174,23 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
     // CREATE LIVE TIME COUNTDOWN
     function timeCountdown(responseTimer) {
+
+	 var startDateTime = moment().subtract(5, 'hours').format('YYYY-MM-DD HH:mm:ss');
+	
+	if ((responseTimer.repeat_count_end == 1) && 
+	    (responseTimer.end_date_timeCheck < startDateTime))
+	{
+	    var newDateTime = moment(startDateTime)
+	    .add(responseTimer.duration, 'minutes')
+	    .format('YYYY-MM-DD HH:mm:ss');
+	
+	    var deadline = newDateTime;
+	}
+	else
+	{
+	    var deadline = responseTimer.time;
+	}
+	    
         var selectorTimer1 = $jq321("form[action='/cart/add']").find("button[type='submit'],input[type='submit']").parent();
         var selectorTimer2 = $jq321("form[action='/cart/add']");
         var selectorTimer3 = $jq321("form[action='/cart/add']:first").find("button[type='submit'],input[type='submit']").parent();
@@ -2210,7 +2228,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             }
         }
 
-        var deadline = responseTimer.time;
+//var deadline = responseTimer.time;
 
         //initializeClock('clockdivpreview', deadline);
         initializeClock('clockdivpreviewSales', deadline);
