@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 5.0.5
+ * @version 5.0.6
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -1141,12 +1141,13 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         });
         statsHtml += "<li>Hidden By Cookie: <b>" + (isHidePopupCookieSet() ? "Yes" : "No") + "</b></li>";
         statsHtml += "</ol>";
-
+let timestamp = new Date().getTime();
         var queryStringData = {
             "webpage": encodeURIComponent(salespoplib_active_url),
             "checkDevice": salespoplib_vars_obj.checkDevice,
             "domain_url": Shopify.shop,
-            "callback": "checkmodule_popup"
+            "callback": "checkmodule_popup",
+	     "time": timestamp
         };
 
         var api_url = salespoplib_vars_obj.backend_url + "checkStore/?" + $jq321.param(queryStringData);
@@ -1658,7 +1659,7 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         console.log(msg);
     };
     /////////////////////// Set flag to get notifications data //////////////////////////
-
+let timestamp = new Date().getTime();
     $jq321.ajax({
         type: "GET",
         url: salespoplib_vars_obj.backend_url + 'checkStore/',
@@ -1670,7 +1671,8 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
             "checkDevice": salespoplib_vars_obj.checkDevice,
             "domain_url": Shopify.shop,
             "product_id": (meta.product && meta.product.id) ? meta.product.id : '',
-            "fetchNotifications": fetchNotifications
+            "fetchNotifications": fetchNotifications,
+		"time":timestamp
         },
         beforeSend: function () {
         },
