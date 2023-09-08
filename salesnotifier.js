@@ -1672,7 +1672,7 @@ let timestamp = new Date().getTime();
             "domain_url": Shopify.shop,
             "product_id": (meta.product && meta.product.id) ? meta.product.id : '',
             "fetchNotifications": fetchNotifications,
-		"time":timestamp
+		"v":timestamp
         },
         beforeSend: function () {
         },
@@ -2136,7 +2136,15 @@ let timestamp = new Date().getTime();
 
         var t = endtime - utc_timestamp;
         /* END  New Hack for Safari */
-
+        if(t < 0){
+            return {
+                'total': 0,
+                'days':0,
+                'hours': 0,
+                'minutes': 0,
+                'seconds': 0
+            }; 
+        }
         var seconds = Math.floor((t / 1000) % 60);
         var minutes = Math.floor((t / 1000 / 60) % 60);
         var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
