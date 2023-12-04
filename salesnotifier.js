@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 5.0.8
+ * @version 5.0.10
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -688,35 +688,11 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
 
         var tempAnchorTag = document.createElement('a');
         tempAnchorTag.href = thisLibUrl;
-
-        var backend = "https://" + tempAnchorTag.hostname + "/index.php/FrontController/";
-        if ("sales-pop.carecart.io" === tempAnchorTag.hostname) {
-            backend = "https://tracking-" + tempAnchorTag.hostname + "/index.php/FrontController/";
-            impressionURL = "https://tracking-" + tempAnchorTag.hostname + "/index.php/ImpressionsCount/";
-        }
-        else if ("lazy-cow-13.telebit.io" === tempAnchorTag.hostname) {
-            backend = "http://localhost:8501/index.php/FrontController/";
-            impressionURL = "http://localhost:8501/index.php/ImpressionsCount/";
-        }
-        else if ("uat-salespop.carecart.io" === tempAnchorTag.hostname) {
-            backend = "https://uat-tracking-sales-pop.carecart.io/index.php/FrontController/";
-            impressionURL = "https://uat-tracking-sales-pop.carecart.io/index.php/ImpressionsCount/";
-        }
-        else if ("dev-sales-pop.carecart.io" === tempAnchorTag.hostname) {
-            backend = "https://dev-tracking-sales-pop.carecart.io/index.php/FrontController/";
-            impressionURL = "https://dev-tracking-sales-pop.carecart.io/index.php/ImpressionsCount/";
-        }
-        else if ("spicy-eel-65.telebit.io" === tempAnchorTag.hostname) {
-            backend = "http://localhost:8500/index.php/FrontController/";
-            impressionURL = "http://localhost:8501/index.php/ImpressionsCount/";
-        }
-        else if ("helpless-insect-91.telebit.io" === tempAnchorTag.hostname) {
-            backend = "http://localhost:8500/index.php/FrontController/";
-            impressionURL = "http://localhost:8501/index.php/ImpressionsCount/";
-        }else if ("shop.kind-monkey-43.telebit.io" === tempAnchorTag.hostname) {
-            backend = "http://localhost:8500/index.php/FrontController/";
-            impressionURL = "http://localhost:8500/index.php/ImpressionsCount/";
-        }
+      
+	tempAnchorTag.hostname = 'sales-pop.carecart.io';
+	var backend = "https://" + tempAnchorTag.hostname + "/index.php/FrontController/";
+	backend = "https://tracking-" + tempAnchorTag.hostname + "/index.php/FrontController/";
+	impressionURL = "https://tracking-" + tempAnchorTag.hostname + "/index.php/ImpressionsCount/";
 
         return {
             "backend": backend,
