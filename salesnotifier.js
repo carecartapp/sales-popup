@@ -3,7 +3,7 @@
  * @author CareCart
  * @link https://apps.shopify.com/partners/care-cart
  * @link https://carecart.io/
- * @version 5.0.10
+ * @version 5.0.11
  *
  * Any unauthorized use and distribution of this and related files, is strictly forbidden.
  * In case of any inquiries, please contact here: https://carecart.io/contact-us/
@@ -774,7 +774,8 @@ scriptInjection("https://code.jquery.com/jquery-3.2.1.min.js", function () {
         debugBB: 0,
         checkDevice: '',
         conversionformSubmitted: false,
-        impressionURL: impressionURL
+	impressionURL: (typeof impressionURL !== 'undefined' && typeof impressionURL !== null) ? impressionURL : "https://tracking-sales-pop.carecart.io/index.php/ImpressionsCount/"
+        //impressionURL: impressionURL
     };
 
     /**
