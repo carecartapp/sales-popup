@@ -1534,12 +1534,35 @@ let timestamp = new Date().getTime();
             timeDifference = Math.floor(timeDifference / 60);
             if (timeDifference >= 24) {
                 timeDifference = Math.floor(timeDifference / 24);
-                timeDifference = Math.abs(timeDifference) + daysAgo;
+               // timeDifference = Math.abs(timeDifference) + daysAgo;
+		var unit = (timeDifference <= 1) ? "day" : "days";
+                if (daysAgo.includes("{{time}}")) {
+                    daysAgo = daysAgo.replace("{{time}}", Math.abs(timeDifference));
+                    timeDifference = daysAgo.replace(/day|days/g, unit);
+                } else {
+                    timeDifference = Math.abs(timeDifference) + " " + daysAgo.replace(/day|days/g, unit);
+                }
             }
             else {
-                timeDifference = Math.abs(timeDifference) + hourAgo;
+                //timeDifference = Math.abs(timeDifference) + hourAgo;
+		var unit = (timeDifference <= 1) ? "hour" : "hours";
+                if (hourAgo.includes("{{time}}")) {
+                    hourAgo = hourAgo.replace("{{time}}", Math.abs(timeDifference));
+                    timeDifference = hourAgo.replace(/hour|hours/g, unit);
+                } else {
+                    timeDifference = Math.abs(timeDifference) + " " + hourAgo.replace(/hour|hours/g, unit);
+                }
             }
-        } else { timeDifference = Math.abs(timeDifference) + minuteAgo; }
+        } else { 
+		//timeDifference = Math.abs(timeDifference) + minuteAgo; 
+	   var unit = (timeDifference <= 1) ? "minute" : "minutes";
+            if (minuteAgo.includes("{{time}}")) {
+                minuteAgo = minuteAgo.replace("{{time}}", Math.abs(timeDifference));
+                timeDifference = minuteAgo.replace(/minute|minutes/g, unit);
+            } else {
+                timeDifference = Math.abs(timeDifference) + " " + minuteAgo.replace(/minute|minutes/g, unit);
+            }
+	}
 
         if (isHidePopupCookieSet()) {
             return false;
