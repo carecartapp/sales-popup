@@ -1629,7 +1629,9 @@ let timestamp = new Date().getTime();
         }
 
         if (apiResponse.timeText == "{{time_ago}}") {
-            $jq321(".pur-time").html(timeDifference);
+		setTimeout(() => {
+		    $jq321(".pur-time").html(timeDifference);
+		}, 1000); // Wait 1 second to ensure the popup appears
         }
 
         let salesNotificationImpressions = {
