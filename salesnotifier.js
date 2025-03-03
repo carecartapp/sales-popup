@@ -1629,7 +1629,12 @@ let timestamp = new Date().getTime();
         }
 
         if (apiResponse.timeText == "{{time_ago}}") {
-		$jq321(".pur-time").html(timeDifference);
+		console.log("Popup shown! Checking .pur-time...");
+	        setTimeout(() => {
+	            console.log("Elements with .pur-time (after popup):", $jq321(".pur-time").length);
+	            $jq321(".pur-time").html(timeDifference);
+	        }, 4000); // Wait for popup to be fully visible
+		
         }
 
         let salesNotificationImpressions = {
