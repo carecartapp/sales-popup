@@ -1521,9 +1521,9 @@ let timestamp = new Date().getTime();
         /**
          * Translated words
          */
-        let minuteAgo = " minute(s) ago";
-        let hourAgo = " hour(s) ago";
-        let daysAgo = " day(s) ago";
+        let minuteAgo = "minute ago";
+        let hourAgo = "hour ago";
+        let daysAgo = "day ago";
         if (apiResponse.timeAgoTranslatedData) {
             minuteAgo = (apiResponse.timeAgoTranslatedData.minutes_ago !== "") ? " " + apiResponse.timeAgoTranslatedData.minutes_ago : minuteAgo;
             hourAgo = (apiResponse.timeAgoTranslatedData.hours_ago !== "") ? " " + apiResponse.timeAgoTranslatedData.hours_ago : hourAgo;
