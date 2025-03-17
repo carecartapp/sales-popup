@@ -1538,9 +1538,9 @@ let timestamp = new Date().getTime();
 		var unit = (timeDifference <= 1) ? "day" : "days";
                 if (daysAgo.includes("{{time}}")) {
                     daysAgo = daysAgo.replace("{{time}}", Math.abs(timeDifference));
-                    timeDifference = daysAgo.replace(/day|days/g, unit);
+                    timeDifference = daysAgo.replace(/\bdays?\b/, unit);
                 } else {
-                    timeDifference = Math.abs(timeDifference) + " " + daysAgo.replace(/day|days/g, unit);
+                    timeDifference = Math.abs(timeDifference) + " " + daysAgo.replace(/\bdays?\b/, unit);
                 }
             }
             else {
@@ -1548,9 +1548,9 @@ let timestamp = new Date().getTime();
 		var unit = (timeDifference <= 1) ? "hour" : "hours";
                 if (hourAgo.includes("{{time}}")) {
                     hourAgo = hourAgo.replace("{{time}}", Math.abs(timeDifference));
-                    timeDifference = hourAgo.replace(/hour|hours/g, unit);
+                    timeDifference = hourAgo.replace(/\bhours?\b/, unit);
                 } else {
-                    timeDifference = Math.abs(timeDifference) + " " + hourAgo.replace(/hour|hours/g, unit);
+                    timeDifference = Math.abs(timeDifference) + " " + hourAgo.replace(/\bhours?\b/, unit);
                 }
             }
         } else { 
@@ -1558,9 +1558,9 @@ let timestamp = new Date().getTime();
 	   var unit = (timeDifference <= 1) ? "minute" : "minutes";
             if (minuteAgo.includes("{{time}}")) {
                 minuteAgo = minuteAgo.replace("{{time}}", Math.abs(timeDifference));
-                timeDifference = minuteAgo.replace(/minute|minutes/g, unit);
+                timeDifference = minuteAgo.replace(/\bminutes?\b/, unit);
             } else {
-                timeDifference = Math.abs(timeDifference) + " " + minuteAgo.replace(/minute|minutes/g, unit);
+                timeDifference = Math.abs(timeDifference) + " " + minuteAgo.replace(/\bminutes?\b/g, unit);
             }
 	}
 
